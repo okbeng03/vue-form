@@ -1,7 +1,7 @@
 export default {
   $data: true,
   removeAdditional: true,
-  useDefaults: true,
+  useDefaults: false,
   coerceTypes: true,
   allErrors: true,
   jsonPointers: true,

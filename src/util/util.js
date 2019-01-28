@@ -6,7 +6,7 @@ const enumToOptions = function (enm) {
 
   _.each(enm, item => {
     options.push({
-      text: item,
+      label: item,
       value: item
     })
   })

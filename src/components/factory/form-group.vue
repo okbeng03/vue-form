@@ -38,6 +38,7 @@ import vHtml from '../basic/html.vue'
 import vNumber from '../basic/number.vue'
 import vSelect from '../basic/select.vue'
 import vTextArea from '../basic/textarea.vue'
+import Editor from '../basic/editor.vue'
 
 const DEFAULT_VALID = {
   status: 0,
@@ -122,7 +123,8 @@ export default {
     'v-html': vHtml,
     'number': vNumber,
     'v-select': vSelect,
-    'v-textarea': vTextArea
+    'v-textarea': vTextArea,
+    'editor': Editor
   }
 }
 </script>

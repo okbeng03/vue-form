@@ -14,7 +14,8 @@ module.exports = {
     // 'tabs': './tabs.js',
     'type': './type.js',
     'definition': './definition.js',
-    'validate': './validate.js'
+    'validate': './validate.js',
+    'editor': './editor.js'
   },
   devtool: "#source-map",
   resolve: {

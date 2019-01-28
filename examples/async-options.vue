@@ -51,11 +51,11 @@ export default {
       key: 'source',
       options: [
         {
-          text: '身份证',
+          label: '身份证',
           value: 'idcard'
         },
         {
-          text: '护照',
+          label: '护照',
           value: 'passport'
         }
       ]

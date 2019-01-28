@@ -7,7 +7,7 @@
       :name="path"
       :readonly="definition.readonly"
       :lazy="definition.lazy === false ? false : true" />
-      {{ item.text }}
+      {{ item.label }}
     </label>
   </div>
 </template>

@@ -40,11 +40,11 @@ export default {
           key: 'sex',
           options: [
             {
-              text: '男',
+              label: '男',
               value: '0'
             },
             {
-              text: '女',
+              label: '女',
               value: '1'
             }
           ]

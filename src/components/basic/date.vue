@@ -1,20 +1,20 @@
 <template>
   <datepicker
     v-model="value"
-    :type="options.type"
-    :range="options.range"
-    :value-type="options.valueType"
-    :lang="options.lang"
-    :clearable="options.clearable"
-    :confirm="options.confirm"
-    :editable="options.editable"
-    :disabled="options.disabled"
+    :type="config.type"
+    :range="config.range"
+    :value-type="config.valueType"
+    :lang="config.lang"
+    :clearable="config.clearable"
+    :confirm="config.confirm"
+    :editable="config.editable"
+    :disabled="config.disabled"
     :format="format"
-    :width="options.width"
-    :not-before="options.notBefore"
-    :not-after="options.notAfter"
-    :disabledDays="options.disabledDays"
-    :append-to-body="options.appendToBody"
+    :width="config.width"
+    :not-before="config.notBefore"
+    :not-after="config.notAfter"
+    :disabledDays="config.disabledDays"
+    :append-to-body="config.appendToBody"
     :input-class="'form-control vue-form-input'"
     :placeholder="definition.placeholder"
   >
@@ -46,7 +46,7 @@ const defaults = {
 export default {
   computed: {
     format () {
-      var date = this.definition.options
+      var date = this.definition.config
 
       if (date && date.format) {
         return date.format
@@ -70,8 +70,8 @@ export default {
 
       return format
     },
-    options () {
-      return extend(true, {}, defaults, this.definition.options)
+    config () {
+      return extend(true, {}, defaults, this.definition.config)
     }
   },
   components: {

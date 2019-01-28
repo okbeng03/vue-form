@@ -80,11 +80,12 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^1.1.2",
     "ajv": "^6.5.3",
     "ajv-errors": "^1.0.1",
     "extend": "^3.0.2",
     "objectpath": "^1.2.2",
-    "vue-drag-and-drop": "^3.0.0",
+    "vue-select": "^2.5.1",
     "vue2-datepicker": "^2.8.1",
     "vuedraggable": "^2.17.0"
   }

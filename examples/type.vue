@@ -88,11 +88,11 @@ export default {
           key: 'sex',
           options: [
             {
-              text: '男',
+              label: '男',
               value: '0'
             },
             {
-              text: '女',
+              label: '女',
               value: '1'
             }
           ]
@@ -106,7 +106,7 @@ export default {
           key: 'birthday',
           type: 'date',
           beforeDay: '2019-01-25',
-          options: {
+          config: {
             type: 'datetime',
             format: 'YYYY-MM-DD HH:mm:ss'
           }
