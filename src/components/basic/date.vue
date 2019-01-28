@@ -1,35 +1,59 @@
 <template>
-  <div class="input-group date" v-datepicker="value">
-      <input type="text" class="form-control spark-input" :value="date" :name="name" :lazy="definition.lazy === false ? false : true" />
-      <span class="input-group-addon">
-          <span class="glyphicon glyphicon-calendar"></span>
-      </span>
-  </div>
+  <datepicker
+    v-model="value"
+    :type="options.type"
+    :range="options.range"
+    :value-type="options.valueType"
+    :lang="options.lang"
+    :clearable="options.clearable"
+    :confirm="options.confirm"
+    :editable="options.editable"
+    :disabled="options.disabled"
+    :format="format"
+    :width="options.width"
+    :not-before="options.notBefore"
+    :not-after="options.notAfter"
+    :disabledDays="options.disabledDays"
+    :append-to-body="options.appendToBody"
+    :input-class="'form-control vue-form-input'"
+    :placeholder="definition.placeholder"
+  >
+  </datepicker>
 </template>
 
 <script>
-import $ from 'jquery'
-import '../../../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
-import '../../../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
-import moment from '../../../bower_components/moment/moment'
+import Datepicker from 'vue2-datepicker'
+import extend from 'extend'
 import basicMixin from '../mixins/basic.js'
 
+const defaults = {
+  type: 'date',
+  range: false,
+  format: 'YYYY-MM-DD',
+  valueType: 'format',
+  lang: 'zh',
+  clearable: false,
+  confirm: false,
+  editable: true,
+  disabled: false,
+  appendToBody: false,
+  width: 210,
+  notBefore: '',
+  notAfter: '',
+  disabledDays: null,
+}
+
 export default {
-  data () {
-    return {
-      date: ''
-    }
-  },
   computed: {
     format () {
-      var date = this.$get('definition.date')
+      var date = this.definition.options
 
       if (date && date.format) {
         return date.format
       }
 
-      var dateFormat = this.$get('definition.schema').format || ''
-      var format
+      const dateFormat = this.schema.format || ''
+      let format
 
       switch (dateFormat) {
         case 'date':
@@ -46,58 +70,13 @@ export default {
 
       return format
     },
-    timestamp () {
-      var date = this.$get('definition.date')
-
-      if (date && date.timestamp) {
-        return date.timestamp
-      }
-
-      return false
+    options () {
+      return extend(true, {}, defaults, this.definition.options)
     }
   },
-  created () {
-    if (this.value) {
-      this.date = moment(this.value).format(this.format)
-    }
+  components: {
+    Datepicker
   },
-  mixins: [basicMixin],
-  directives: {
-    'datepicker': {
-      twoWay: true,
-      priority: 1000,
-      bind: function () {
-        var that = this
-        var definition = this.vm.$get('definition')
-        var options = {
-          format: this.vm.$get('format'),
-          locale: 'zh-cn',
-          allowInputToggle: true,
-          widgetPositioning: {
-            horizontal: 'left'
-          }
-        }
-
-        if (definition.min) {
-          options.minDate = new Date(definition.min)
-        }
-
-        if (definition.max) {
-          options.maxDate = new Date(definition.max)
-        }
-
-        $(this.el).datetimepicker(options)
-          .on('dp.change', function () {
-            var val = $(this).find('input').val()
-
-            val = that.vm.timestamp ? new Date(val).getTime() : val
-            that.vm.$set('value', val)
-          })
-      },
-      unbind: function () {
-        $(this.el).off().datetimepicker('destroy')
-      }
-    }
-  }
+  mixins: [basicMixin]
 }
 </script>

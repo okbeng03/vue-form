@@ -1,49 +1,18 @@
-'use strict';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import _ from 'lodash'
+import VueForm from '../dist/vue-jsonschema-form.umd.js'
+import { store } from '../dist/vue-jsonschema-form.umd.js'
+import App from './definition.vue'
 
-import SparkForm from '../dist/form'
+Vue.config.productionTip = false
+Vue.use(Vuex)
+Vue.use(VueForm)
 
-var sparkForm = {
-  schema: {
-    "title": "basic",
-    "type": "object",
-    "properties": {
-      "name": {
-        "type": "string",
-        "title": "姓名"
-      },
-      "phone": {
-        "type": "string",
-        "title": "手机",
-        "pattern": /^1[3578]\d{9}/,
-        "description": "请输入正确的手机号码"
-      }
-    },
-    "required": ["name", "phone"]
-  },
-  form: [
-    "name",
-    {
-      "key": "phone",
-      "placeholder": "13/15/17/18开头的手机号码"
-    }
-  ],
-  data: {
-    name: '王昌彬'
-  }
-};
-
-$(function() {
-  var form = new SparkForm('#doc', {
-    schema: sparkForm.schema,
-    form: sparkForm.form,
-    data: sparkForm.data
-  });
-
-  $('#save').click(function() {
-		var result = form.getValues();
-
-		if (result) {
-			console.log(result);
-		}
-	});
-});
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  store: new Vuex.Store(store),
+  components: { App },
+  template: '<App ref="app"/>'
+})

@@ -1,65 +1,18 @@
-'use strict';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import _ from 'lodash'
+import VueForm from '../dist/vue-jsonschema-form.umd.js'
+import { store } from '../dist/vue-jsonschema-form.umd.js'
+import App from './array-root.vue'
 
-import SparkForm from '../dist/form'
+Vue.config.productionTip = false
+Vue.use(Vuex)
+Vue.use(VueForm)
 
-var sparkForm = {
-  schema: {
-    "title": "okbeng",
-    "type": "array",
-    "items": {
-      "type": "object",
-      "title": "列表",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "课程"
-        },
-        "score": {
-          "type": "integer",
-          "title": "分数"
-        }
-      },
-      "required": ["name", "score"]
-    }
-  },
-  form: [{
-    "type": "inline",
-    "items": [{
-      "title": "标题",
-      "key": "name",
-      "type": "text",
-      "col": 5
-    }, {
-      "title": "标题",
-      "key": "age",
-      "type": "number",
-      "col": 6
-    }]
-  }],
-  data: [
-    {
-      name: '语文',
-      score: 80
-    },
-    {
-      name: '数学',
-      score: 100
-    }
-  ]
-};
-
-$(function() {
-  var form = new SparkForm('#doc', {
-    schema: sparkForm.schema,
-    form: sparkForm.form,
-    data: sparkForm.data
-  });
-
-  $('#save').click(function() {
-		var result = form.getValues();
-
-		if (result) {
-			console.log(result);
-		}
-	});
-});
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  store: new Vuex.Store(store),
+  components: { App },
+  template: '<App ref="app"/>'
+})

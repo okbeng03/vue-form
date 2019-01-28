@@ -1,10 +1,16 @@
 export default {
   props: {
     definition: {
-      type: Object
+      type: Object,
+      required: true
     },
     path: {
-      type: Array
+      type: Array,
+      required: true
+    },
+    schema: {
+      type: Object,
+      required: true
     }
   }
 }

@@ -1,0 +1,59 @@
+.form-horizontal {
+  padding: 20px 20px 0;
+
+  .fieldset {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .list-group {
+    .list-group-item {
+      position: relative;
+      padding: 10px 30px;
+    }
+    .list-group-item > .glyphicon-remove,
+    .list-group-item > .glyphicon-chevron-up,
+    .list-group-item > .glyphicon-chevron-down {
+      position: absolute;
+      right: 10px;
+      width: 16px;
+      cursor: pointer;
+    }
+    .list-group-item > .glyphicon-remove {
+      top: 10px;
+    }
+    .list-group-item > .glyphicon-chevron-up {
+      top: 30px;
+      right: 9px;
+    }
+    .list-group-item > .glyphicon-chevron-down {
+      top: 50px;
+    }
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+  .tab-pane {
+    padding: 20px 0;
+  }
+}
+.form-group {
+  > label {
+    display: block;
+  }
+  .required {
+    display: inline-block;
+    color: #a94442;
+  }
+
+  .form-tips {
+    margin-top: 5px;
+    color: #999;
+  }
+
+  &.has-error {
+    .form-tips {
+      color: #a94442;
+    }
+  }
+}

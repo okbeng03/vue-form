@@ -1,14 +1,14 @@
 <template>
-  <input type="number" class="form-control spark-input" v-model="value"
-  :placeholder="definition.placeholder"
-  :disabled="definition.disabled"
-  :max="definition.schema.maximum"
-  :min="definition.schema.minimum"
-  :name="name"
-  :readonly="definition.readonly"
-  :required="definition.required"
-  :step="definition.step"
-  :lazy="definition.lazy === false ? false : true" />
+  <input type="number" class="form-control vue-form-input" v-model.lazy="value"
+    :placeholder="definition.placeholder"
+    :disabled="definition.disabled"
+    :max="schema.maximum"
+    :min="schema.minimum"
+    :name="name"
+    :readonly="definition.readonly"
+    :required="definition.required"
+    :step="definition.step"
+  />
 </template>
 
 <script>

@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <input type="hidden" class="form-control spark-input" v-model="value"
-    :maxlength="definition.schema.maxlength"
-    :minLength="definition.schema.minLength"
+  <input type="hidden" class="form-control vue-form-input" v-model="value"
+    :maxlength="schema.maxlength"
+    :minLength="schema.minLength"
     :name="name"
-    :pattern="definition.schema.pattern"
-    :required="definition.required" />
-    <slot></slot>
-  </div>
+    :pattern="schema.pattern"
+    :required="definition.required" 
+  />
 </template>
 
 <script>

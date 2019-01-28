@@ -1,6 +1,5 @@
 <template>
-  <div class="spark-html">
-    {{{definition.tpl}}}
+  <div class="vue-form-html" v-html="definition.tpl">
   </div>
 </template>
 

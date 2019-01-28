@@ -1,86 +1,86 @@
 import Vue from 'vue'
-import $ from 'jquery'
+import { mapState, mapMutations } from 'vuex'
 import _ from 'lodash'
-import formSchema from '../../core/schema'
-import { setValue, removeValue, exchanceItem } from '../../vuex/actions'
-
-import sortable from 'vue-drag-and-drop'
-
-Vue.use(sortable)
+import draggable from 'vuedraggable'
 
 export default {
-  vuex: {
-    getters: {
-      model: state => state.model
-    },
-    actions: {
-      removeValue,
-      setValue,
-      exchanceItem
-    }
-  },
   data () {
     return {
-      len: 0,
-      defaultValue: null
+      len: 0
     }
   },
   props: {
     definition: {
-      type: Object
+      type: Object,
+      required: true
     },
     path: {
-      type: Array
+      type: Array,
+      required: true
+    },
+    schema: {
+      type: Object,
+      required: true
     }
   },
   computed: {
+    ...mapState({
+      model: state => state.model
+    }),
+    list: {
+      get () {
+        return _.get(this.model, this.path)
+      },
+      set (value) {
+        this.setValue({ path: this.path, value: value})
+      }
+    },
     minItems () {
-      return this.$get('definition.schema.minItems') || 0
+      return this.schema.minItems || 0
     },
     maxItems () {
-      return this.$get('definition.schema.maxItems') || 100
+      return this.schema.maxItems || 100
     }
   },
   created () {
     var model = _.get(this.model, this.path)
 
     this.len = model ? model.length : 0
-
-    this.defaultValue = formSchema.defaultValue(this.$get('definition.schema'))[0]
   },
   methods: {
+    ...mapMutations([
+      'removeValue',
+      'setValue',
+      'exchanceItem'
+    ]),
     remveItem (idx) {
-      if (this.$get('len') > this.minItems) {
+      if (this.len > this.minItems) {
         this.len = this.len - 1
 
         this.removeValue(this.path.concat(idx))
       } else {
-        /*global alert:true*/
-        /*eslint no-undef: "error"*/
+        /* global alert:true */
+        /* eslint no-undef: "error" */
         alert('小于最小个数')
       }
     },
     addItem () {
-      // TODO: 判断是否超出最大个数
-      if (this.$get('len') < this.maxItems) {
-        if (this.defaultValue) {
-          this.setValue(this.path.concat(this.len), _.clone(this.defaultValue))
-        }
-
+      if (this.len < this.maxItems) {
         this.len = this.len + 1
       } else {
+        /* global alert:true */
+        /* eslint no-undef: "error" */
         alert('大于最大个数')
       }
     },
     upItem (idx) {
-      this.exchanceItem(this.path, idx - 1, idx)
+      this.exchanceItem({ path: this.path, newIndex: idx - 1, oldIndex: idx})
     },
     downItem (idx) {
-      this.exchanceItem(this.path, idx, idx + 1)
-    },
-    moveItem (itemOne, itemTwo) {
-      this.exchanceItem(this.path, $(itemOne).data('index'),
-        $(itemTwo).closest('.list-group-item').data('index'))
+      this.exchanceItem({ path: this.path, newIndex: idx, oldIndex: idx + 1})
     }
+  },
+  components: {
+    draggable
   }
 }

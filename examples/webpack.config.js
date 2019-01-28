@@ -11,19 +11,17 @@ module.exports = {
     'basic': './basic.js',
     'fieldset': './fieldset.js',
     'inline': './inline.js',
-    'tab': './tab.js',
+    // 'tabs': './tabs.js',
     'type': './type.js',
     'definition': './definition.js',
-    'validate': './validate.js',
-    'component': './component.js',
-    'mutiple-instance': './mutiple-instance.js'
+    'validate': './validate.js'
   },
   devtool: "#source-map",
-  externals: {
-    'jquery': 'var jQuery',
-    'vue': 'var Vue',
-    'vuex': 'var Vuex',
-    'lodash': 'var _'
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
   },
   output: {
     path: path.resolve(root, './build'),
@@ -33,20 +31,20 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: path.resolve(root, '../'),
         exclude: /node_modules/
       },
-      {
-        test: /\.css$/,
-        loader: 'style!css'
-      }, {
-        test: /\.less$/,
-        loader: 'style!css!less'
-      },
+      // {
+      //   test: /\.css$/,
+      //   loader: 'style!css'
+      // }, {
+      //   test: /\.less$/,
+      //   loader: 'style!css!less'
+      // },
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader'
       }
     ]
   }

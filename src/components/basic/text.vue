@@ -1,14 +1,14 @@
 <template>
-  <input type="text" class="form-control spark-input" v-model="value"
-  :placeholder="definition.placeholder"
-  :disabled="definition.disabled"
-  :maxlength="definition.schema.maxlength"
-  :minLength="definition.schema.minLength"
-  :name="name"
-  :pattern="definition.schema.pattern"
-  :readonly="definition.readonly"
-  :required="definition.required"
-  :lazy="definition.lazy === false ? false : true" />
+  <input type="text" class="form-control spark-input" v-model.lazy="value"
+    :placeholder="definition.placeholder"
+    :disabled="definition.disabled"
+    :maxlength="schema.maxlength"
+    :minLength="schema.minLength"
+    :name="name"
+    :pattern="schema.pattern"
+    :readonly="definition.readonly"
+    :required="definition.required"
+  />
 </template>
 
 <script>

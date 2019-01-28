@@ -1,82 +1,67 @@
 import _ from 'lodash'
-import { setValue, removeValue, setMessage, validateSingle } from '../../vuex/actions'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
-  vuex: {
-    getters: {
-      model: state => state.model
+  // data () {
+  //   return {
+  //     originValue: null
+  //   }
+  // },
+  props: {
+    definition: {
+      type: Object,
+      required: true
     },
-    actions: {
-      setValue,
-      removeValue,
-      setMessage,
-      validateSingle
+    path: {
+      type: Array,
+      required: true
+    },
+    schema: {
+      type: Object,
+      required: true
     }
   },
-  data () {
-    return {
-      originValue: null
-    }
-  },
+  // created () {
+  //   var value = _.get(this.model, this.path)
+
+  //   if (typeof value !== 'undefined') {
+  //     this.originValue = _.clone(value)
+  //   } else if (this.originValue !== null) {
+  //     // 设置表单元素默认值
+  //     this.setValue({ path: this.path, value: this.originValue })
+  //   }
+  // },
   computed: {
+    ...mapState({
+      model: state => state.model
+    }),
     value: {
       get () {
         return _.get(this.model, this.path)
       },
       set (val) {
-        if (typeof val === 'string') {
-          val = val.trim()
-        }
-
         // 无值
         if (val === '') {
-          if (this.required) {
-            this.setMessage(this.path, 2, '此项为必填项')
-          }
-
-          this.$nextTick(function () {
-            this.removeValue(this.path)
-          })
+          this.removeValue(this.path)
         } else {
-          if (this.type === 'number') {
-            val = val - 0
-          }
-
-          this.validateSingle(this.path, val, this.schema)
+          this.setValue({ path: this.path, value: val})
         }
-
-        this.setValue(this.path, val)
       }
     },
     name () {
-      return this.$get('path').join('.')
+      return this.path.join('.')
     },
     type () {
-      return this.$get('definition.type')
+      return this.definition.type
     },
     required () {
-      return this.$get('definition.required')
-    },
-    schema () {
-      return this.$get('definition.schema')
+      return this.definition.required
     }
   },
-  props: {
-    definition: {
-      type: Object
-    },
-    path: {
-      type: Array
-    }
-  },
-  created () {
-    var value = _.get(this.model, this.path)
-
-    if (typeof value !== 'undefined') {
-      this.originValue = _.clone(value)
-    } else if (this.originValue !== null) {
-      // 设置表单元素默认值
-      this.setValue(this.path, this.originValue)
-    }
+  methods: {
+    ...mapMutations([
+      'setValue',
+      'removeValue'
+    ])
   }
 }
