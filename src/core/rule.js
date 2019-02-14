@@ -3,5 +3,5 @@ export default {
   object: ['fieldset'],
   array: ['checkboxes', 'array'],
   number: ['number'],
-  string: ['date', 'select', 'text']
+  string: ['date', 'image', 'select', 'text']
 }

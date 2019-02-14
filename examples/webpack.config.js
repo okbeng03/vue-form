@@ -15,7 +15,8 @@ module.exports = {
     'type': './type.js',
     'definition': './definition.js',
     'validate': './validate.js',
-    'editor': './editor.js'
+    'editor': './editor.js',
+    'image-upload': './image-upload.js'
   },
   devtool: "#source-map",
   resolve: {

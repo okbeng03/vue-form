@@ -39,6 +39,7 @@ import vNumber from '../basic/number.vue'
 import vSelect from '../basic/select.vue'
 import vTextArea from '../basic/textarea.vue'
 import Editor from '../basic/editor.vue'
+import ImageUpload from '../basic/image-upload.vue'
 
 const DEFAULT_VALID = {
   status: 0,
@@ -124,7 +125,8 @@ export default {
     'number': vNumber,
     'v-select': vSelect,
     'v-textarea': vTextArea,
-    'editor': Editor
+    'editor': Editor,
+    'image-upload': ImageUpload
   }
 }
 </script>

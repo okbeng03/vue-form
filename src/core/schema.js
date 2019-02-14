@@ -10,6 +10,7 @@ import fieldsetRule from './rules/fieldset'
 import numberRule from './rules/number'
 import selectRule from './rules/select'
 import textRule from './rules/text'
+import imageUploadRule from './rules/image-upload'
 
 const rulesMap = {
   checkbox: checkboxRule,
@@ -19,7 +20,8 @@ const rulesMap = {
   number: numberRule,
   date: dateRule,
   select: selectRule,
-  text: textRule
+  text: textRule,
+  image: imageUploadRule
 }
 
 const BUILD_IN_TYPE = [
