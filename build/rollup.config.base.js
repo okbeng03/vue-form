@@ -11,7 +11,7 @@ const config = require('../package.json')
 export default {
 	input: 'src/index.js',
 	name: 'vue-jsonschema-form',
-	external: ['vue', 'lodash', 'vuex'],
+	external: ['vue', 'lodash', 'vuex', 'axios'],
 	plugins: [
 		postcss({
 			extensions: ['.css', '.less']
