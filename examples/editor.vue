@@ -7,6 +7,26 @@
 </template>
 
 <script>
+import axios from 'axios'
+
+function upload (image) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'POST',
+      url: 'http://ava.com/api/imagemin',
+      data: {
+        data: image
+      }
+    }).then(response => {
+      console.log(response)
+      resolve('http://www.tianjin-air.com/style/gsair/img/news-banner.jpg')
+    }).catch(err => {
+      console.error(err)
+      reject(err)
+    })
+  })
+}
+
 export default {
   data () {
     return {
@@ -32,7 +52,19 @@ export default {
           type: 'editor',
           config: {
             init: {
-              height: 300
+              height: 300,
+              image_advtab: true,
+              images_upload_handler: function (blobInfo, success, failure) {
+                const image = `data:image/${blobInfo.filename().split('.')[1]};base64,${blobInfo.base64()}`
+
+                upload(image).then(uri => {
+                  success(uri)
+                }).catch(err => {
+                  console.error(err)
+                  failure(err.message || '')
+                })
+                success('http://www.tianjin-air.com/style/gsair/img/news-banner.jpg')
+              }
             },
             plugins: 'emoticons directionality anchor autosave',
             toolbar: 'ltr rtl | emoticons'
