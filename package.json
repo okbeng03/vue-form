@@ -1,5 +1,5 @@
 {
-  "name": "vue-jsonschema-form",
+  "name": "jsonschema-form-vue",
   "version": "1.0.0",
   "description": "A simple Vue component capable of building HTML forms out of a JSON schema",
   "main": "dist/vue-jsonschema-form.umd.js",
@@ -10,8 +10,8 @@
     "build:browser": "rollup --config build/rollup.config.browser.js",
     "build:es": "rollup --config build/rollup.config.es.js",
     "build:umd": "rollup --config build/rollup.config.umd.js",
-    "prepublishOnly": "npm run test && npm run build",
     "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
+    "prepublishOnly": "npm run build",
     "test": "npm run test:unit",
     "test:unit": "jest --config tests/unit/jest.config.js --coverage",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
