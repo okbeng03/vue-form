@@ -8,7 +8,7 @@
     :clearable="config.clearable"
     :confirm="config.confirm"
     :editable="config.editable"
-    :disabled="config.disabled"
+    :disabled="definition.disabled"
     :format="format"
     :width="config.width"
     :not-before="config.notBefore"
