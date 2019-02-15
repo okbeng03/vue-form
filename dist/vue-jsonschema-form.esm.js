@@ -309,7 +309,7 @@ var defaults$1 = {
 };
 
 var vDate = { render: function render() {
-    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('datepicker', { attrs: { "type": _vm.config.type, "range": _vm.config.range, "value-type": _vm.config.valueType, "lang": _vm.config.lang, "clearable": _vm.config.clearable, "confirm": _vm.config.confirm, "editable": _vm.config.editable, "disabled": _vm.config.disabled, "format": _vm.format, "width": _vm.config.width, "not-before": _vm.config.notBefore, "not-after": _vm.config.notAfter, "disabledDays": _vm.config.disabledDays, "append-to-body": _vm.config.appendToBody, "input-class": 'form-control vue-form-input', "placeholder": _vm.definition.placeholder }, model: { value: _vm.value, callback: function callback($$v) {
+    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('datepicker', { attrs: { "type": _vm.config.type, "range": _vm.config.range, "value-type": _vm.config.valueType, "lang": _vm.config.lang, "clearable": _vm.config.clearable, "confirm": _vm.config.confirm, "editable": _vm.config.editable, "disabled": _vm.definition.disabled, "format": _vm.format, "width": _vm.config.width, "not-before": _vm.config.notBefore, "not-after": _vm.config.notAfter, "disabledDays": _vm.config.disabledDays, "append-to-body": _vm.config.appendToBody, "input-class": 'form-control vue-form-input', "placeholder": _vm.definition.placeholder }, model: { value: _vm.value, callback: function callback($$v) {
           _vm.value = $$v;
         }, expression: "value" } });
   }, staticRenderFns: [],
@@ -4337,7 +4337,17 @@ var arrayMixins = {
 };
 
 var Array$1 = { render: function render() {
-    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('draggable', { staticClass: "list-group", attrs: { "element": "ul", "options": { draggable: '.drag-item' } }, model: { value: _vm.list, callback: function callback($$v) {
+    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _vm.definition.isFixed ? _c('ul', { staticClass: "list-group" }, [_vm._l(_vm.len, function (idx) {
+      return _c('li', { key: idx - 1, staticClass: "list-group-item drag-item", attrs: { "drop": "moveItem" } }, [_vm._l(_vm.definition.items, function (group) {
+        return _c('form-group', { key: (group.key ? group.key.join('.') : '') + '-' + (idx - 1), attrs: { "definition": group, "index": idx - 1 } });
+      }), _vm._v(" "), !_vm.definition.isFixed ? _c('span', { staticClass: "glyphicon glyphicon-remove", attrs: { "type": "button" }, on: { "click": function click($event) {
+            return _vm.remveItem(idx - 1);
+          } } }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== 1 ? _c('span', { staticClass: "glyphicon glyphicon-chevron-up", attrs: { "type": "button" }, on: { "click": function click($event) {
+            return _vm.upItem(idx - 1);
+          } } }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== _vm.len ? _c('span', { staticClass: "glyphicon glyphicon-chevron-down", attrs: { "type": "button" }, on: { "click": function click($event) {
+            return _vm.downItem(idx - 1);
+          } } }) : _vm._e()], 2);
+    }), _vm._v(" "), _c('li', { staticClass: "list-group-item text-right", attrs: { "slot": "footer" }, slot: "footer" }, [_c('button', { staticClass: "btn btn-primary", attrs: { "type": "button" }, on: { "click": _vm.addItem } }, [_vm._v("添加")])])], 2) : _c('draggable', { staticClass: "list-group", attrs: { "element": "ul", "options": { draggable: '.drag-item' } }, model: { value: _vm.list, callback: function callback($$v) {
           _vm.list = $$v;
         }, expression: "list" } }, [_vm._l(_vm.len, function (idx) {
       return _c('li', { key: idx - 1, staticClass: "list-group-item drag-item", attrs: { "drop": "moveItem" } }, [_vm._l(_vm.definition.items, function (group) {
