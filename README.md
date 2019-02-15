@@ -9,7 +9,7 @@ Vue Form 是一套基于 JSON Schema 使用 Vue.js 自动生成表单的库。
 * 支持编辑器(Tinymce)、datePicker、select、image-upload 等
 * 支持扩展自定义组件、校验
 
-## [文档](https://okbeng03.github.io/vue-form-doc/index.html)
+## [文档](https://okbeng03.github.io/vue-form-doc)
 
 ## 起步
 > 假设你已了解和熟悉Vue开发
