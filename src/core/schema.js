@@ -141,8 +141,8 @@ function defaultValue (schema, key, model) {
   if (type === 'object') {
     model[key] = {}
 
-    _.each(schema.properties, function (val, key) {
-      defaultValue(val, key, model[key])
+    _.each(schema.properties, function (val, _key) {
+      defaultValue(val, _key, model[key])
     })
   } else if (type === 'array') {
     model[key] = []
