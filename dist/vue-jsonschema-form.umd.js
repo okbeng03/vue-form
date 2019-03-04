@@ -4563,6 +4563,7 @@ var rule = {
   object: ['fieldset'],
   array: ['checkboxes', 'array'],
   number: ['number'],
+  integer: ['number'],
   string: ['date', 'image', 'select', 'text']
 };
 
@@ -4923,8 +4924,8 @@ function defaultValue(schema, key, model) {
   if (type === 'object') {
     model[key] = {};
 
-    _$1.each(schema.properties, function (val, key) {
-      defaultValue(val, key, model[key]);
+    _$1.each(schema.properties, function (val, _key) {
+      defaultValue(val, _key, model[key]);
     });
   } else if (type === 'array') {
     model[key] = [];
