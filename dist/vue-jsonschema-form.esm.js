@@ -12522,6 +12522,12 @@ var setValue = function setValue(state, _ref2) {
   validate(state, path);
 };
 
+var setModel = function setModel(state, model) {
+  state.model = _$1.cloneDeep(model);
+
+  validate(state);
+};
+
 // 删除指定属性，表单元素值为空或数组删除时触发
 var removeValue = function removeValue(state, path) {
   var last = path[path.length - 1];
@@ -12604,6 +12610,7 @@ var mutations = Object.freeze({
 	setMessages: setMessages,
 	validate: validate,
 	setValue: setValue,
+	setModel: setModel,
 	removeValue: removeValue,
 	exchanceItem: exchanceItem,
 	setOptions: setOptions

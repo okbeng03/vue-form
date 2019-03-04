@@ -140,11 +140,11 @@ export const setValue = (state, { path, value }) => {
   validate(state, path)
 }
 
-export const setModel = (state, model => {
+export const setModel = (state, model) => {
   state.model = _.cloneDeep(model)
 
   validate(state)
-})
+}
 
 // 删除指定属性，表单元素值为空或数组删除时触发
 export const removeValue = (state, path) => {
