@@ -42,6 +42,11 @@ export default {
       return this.schema.maxItems || 100
     }
   },
+  watch: {
+    list (newValue) {
+      this.len = newValue.length
+    }
+  },
   created () {
     var model = _.get(this.model, this.path)
 

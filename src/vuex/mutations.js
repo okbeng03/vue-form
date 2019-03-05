@@ -154,7 +154,10 @@ export const removeValue = (state, path) => {
     path.pop()
 
     const model = _.get(state.model, path)
-    model.splice(last, 1)
+
+    if (model && model.length) {
+      model.splice(last, 1)
+    }
   } else {
     const model = Object.assign({}, state.model)
 

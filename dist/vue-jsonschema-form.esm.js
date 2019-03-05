@@ -2476,9 +2476,9 @@ var __vue_render__$d = function __vue_render__() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "fieldset" }, _vm._l(_vm.definition.items, function (group) {
+  return _c("div", { staticClass: "fieldset" }, _vm._l(_vm.definition.items, function (group, idx) {
     return _c("form-group", {
-      key: (group.key ? group.key.join(".") : "") + "-" + _vm.idx,
+      key: (group.key ? group.key.join(".") : "") + "-" + idx,
       attrs: { definition: group }
     });
   }), 1);
@@ -2545,6 +2545,11 @@ var arrayMixins = {
       return this.schema.maxItems || 100;
     }
   }),
+  watch: {
+    list: function list(newValue) {
+      this.len = newValue.length;
+    }
+  },
   created: function created() {
     var model = _$2.get(this.model, this.path);
 
@@ -2729,9 +2734,9 @@ var __vue_render__$f = function __vue_render__() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "row" }, _vm._l(_vm.definition.items, function (group) {
+  return _c("div", { staticClass: "row" }, _vm._l(_vm.definition.items, function (group, idx) {
     return _c("div", {
-      key: (group.key ? group.key.join(".") : "") + "-" + _vm.idx,
+      key: (group.key ? group.key.join(".") : "") + "-" + idx,
       class: ["col-xs-" + group.col]
     }, [_c("form-group", { attrs: { definition: group } })], 1);
   }), 0);
@@ -10989,7 +10994,10 @@ var removeValue = function removeValue(state, path) {
     path.pop();
 
     var model = _$2.get(state.model, path);
-    model.splice(last, 1);
+
+    if (model && model.length) {
+      model.splice(last, 1);
+    }
   } else {
     var _model2 = Object.assign({}, state.model);
 
