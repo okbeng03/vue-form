@@ -24,15 +24,9 @@ export default {
 		cjs({
 			include: 'node_modules/**',
 		}),
-		vue({
-			css (style) {
-			},
-		}),
+		vue(),
 		babel({
-			exclude: 'node_modules/**',
-			'plugins': [
-				'external-helpers',
-			],
+			exclude: 'node_modules/**'
 		}),
 		replace({
 			VERSION: JSON.stringify(config.version),
