@@ -2648,7 +2648,7 @@ var __vue_render__$e = function __vue_render__() {
     on: { click: _vm.addItem }
   }, [_vm._v("添加")])])], 2) : _c("draggable", {
     staticClass: "list-group",
-    attrs: { element: "ul", options: { draggable: ".drag-item" } },
+    attrs: { tag: "ul", draggable: ".drag-item" },
     model: {
       value: _vm.list,
       callback: function callback($$v) {
@@ -10882,10 +10882,14 @@ var init = function init(state, _ref) {
 
   state.definition = generator.parse(schema, definition);
   state.schema = schema;
+  state.validator = null;
 
   var data = generator.getDefaultModal(schema);
   state.model = _extend_3_0_2_extend(true, {}, data, model);
+  console.log(1111, data, model, state.model);
   state.ajv = new Ajv$1();
+  state.messages = {};
+  state.valid = true;
 };
 
 /**
