@@ -50,6 +50,8 @@ export const init = (state, { schema, definition, model = {} }) => {
   const data = generator.getDefaultModal(schema)
   state.model = extend(true, {}, data, model)
   state.ajv = new Ajv()
+  state.messages = {}
+  state.valid = true
 }
 
 /**
