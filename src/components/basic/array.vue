@@ -11,7 +11,7 @@
       <button type="button" class="btn btn-primary" @click="addItem">添加</button>
     </li>
   </ul>
-  <draggable v-else v-model="list" element="ul" class="list-group" :options="{draggable:'.drag-item'}">
+  <draggable v-else v-model="list" tag="ul" class="list-group" draggable=".drag-item">
     <li v-for="idx in len" class="list-group-item drag-item" :key="idx - 1" drop="moveItem">
       <form-group v-for="group in definition.items" :definition="group" :key="`${group.key ? group.key.join('.') : ''}-${idx - 1}`" :index="idx - 1">
       </form-group>
