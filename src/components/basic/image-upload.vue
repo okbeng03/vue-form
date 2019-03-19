@@ -28,6 +28,7 @@
 import axios from 'axios'
 import PictureInput from 'vue-picture-input'
 import extend from 'extend'
+import { mapActions } from 'vuex'
 import basicMixin from '../mixins/basic.js'
 
 const defaults = {
@@ -86,16 +87,29 @@ export default {
     onChange (image) {
       const { config } = this
 
-      if (image && config.action) {
-        config.action(image).then(uri => {
-          if (uri) {
-            this.value = uri
-          }
-        }).catch(err => {
-          console.error(err)
-        })
+      if (image) {
+        if (config.action) {
+          config.action(image, config.directory).then(uri => {
+            if (uri) {
+              this.value = uri
+            }
+          }).catch(err => {
+            console.error(err)
+          })
+        } else {
+          this.uploadImage(image, config.directory).then(uri => {
+            if (uri) {
+              this.value = uri
+            }
+          }).catch(err => {
+            console.error(err)
+          })
+        }
       }
-    }
+    },
+    ...mapActions([
+      'uploadImage'
+    ])
   },
   mixins: [basicMixin],
   components: {
