@@ -1,6 +1,7 @@
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import Vue from 'vue';
 import _$2 from 'lodash';
+import store$1 from '@/store';
 import 'axios';
 import draggable from 'vuedraggable';
 
@@ -1209,14 +1210,34 @@ var Editor = {
 
 //
 
-var plugins = ['lists', 'advlist', 'image', 'table', 'textcolor', 'colorpicker', 'codesample', 'contextmenu', 'link', 'fullscreen', 'help', 'preview', 'searchreplace', 'hr', 'wordcount', 'autosave'];
-var toolbars = ['undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | outdent indent | table hr link image | searchreplace | fullscreen preview help'];
+var plugins = ['lists', 'advlist', 'image', 'table', 'textcolor', 'colorpicker', 'codesample', 'contextmenu', 'link', 'fullscreen', 'help', 'preview', 'searchreplace', 'hr', 'wordcount', 'autosave'
+// 'powerpaste'
+];
+var toolbars = ['undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | table hr link image | searchreplace | fullscreen preview help'];
 
 var defaults$2 = {
   init: {
     height: 500,
     contextmenu: 'link image inserttable | cell row column deletetable',
-    default_link_target: '_blank'
+    default_link_target: '_blank',
+    external_plugins: {
+      'powerpaste': '/style/cms/powerpaste/plugin.js'
+    },
+    powerpaste_allow_local_images: true,
+    powerpaste_word_import: 'prompt',
+    powerpaste_html_import: 'prompt',
+    image_advtab: true,
+    images_upload_handler: function images_upload_handler(blobInfo, success, failure) {
+      var image = 'data:image/' + blobInfo.filename().split('.')[1] + ';base64,' + blobInfo.base64();
+
+      store$1.dispatch('uploadImage', image).then(function (uri) {
+        console.log(1111, uri);
+        success(uri);
+      }).catch(function (err) {
+        console.error(err);
+        failure(err.message || '');
+      });
+    }
   }
 };
 
@@ -2152,7 +2173,7 @@ __vue_render__$a._withStripped = true;
     undefined
   );
 
-//
+var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var defaults$3 = {
   width: 200,
@@ -2210,24 +2231,34 @@ var script$b = {
     });
   },
 
-  methods: {
+  methods: _extends$1({
     onChange: function onChange(image) {
       var _this2 = this;
 
       var config = this.config;
 
 
-      if (image && config.action) {
-        config.action(image).then(function (uri) {
-          if (uri) {
-            _this2.value = uri;
-          }
-        }).catch(function (err) {
-          console.error(err);
-        });
+      if (image) {
+        if (config.action) {
+          config.action(image, config.directory).then(function (uri) {
+            if (uri) {
+              _this2.value = uri;
+            }
+          }).catch(function (err) {
+            console.error(err);
+          });
+        } else {
+          this.uploadImage(image, config.directory).then(function (uri) {
+            if (uri) {
+              _this2.value = uri;
+            }
+          }).catch(function (err) {
+            console.error(err);
+          });
+        }
       }
     }
-  },
+  }, mapActions(['uploadImage'])),
   mixins: [basicMixin],
   components: {
     PictureInput: PictureInput
@@ -2282,7 +2313,7 @@ var __vue_is_functional_template__$b = false;
 
 var ImageUpload = normalizeComponent_1({ render: __vue_render__$b, staticRenderFns: __vue_staticRenderFns__$b }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$b, undefined, undefined);
 
-var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var DEFAULT_VALID = {
   status: 0,
@@ -2300,7 +2331,7 @@ var script$c = {
       default: -1
     }
   },
-  computed: _extends$1({}, mapState({
+  computed: _extends$2({}, mapState({
     messages: function messages(state) {
       return state.messages;
     }
@@ -2502,7 +2533,7 @@ var Fieldset = normalizeComponent_1({ render: __vue_render__$d, staticRenderFns:
 
 Vue.component('v-fieldset', Fieldset);
 
-var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var arrayMixins = {
   data: function data() {
@@ -2525,7 +2556,7 @@ var arrayMixins = {
       required: true
     }
   },
-  computed: _extends$2({}, mapState({
+  computed: _extends$3({}, mapState({
     model: function model(state) {
       return state.model;
     }
@@ -2556,7 +2587,7 @@ var arrayMixins = {
     this.len = model ? model.length : 0;
   },
 
-  methods: _extends$2({}, mapMutations(['removeValue', 'setValue', 'exchanceItem']), {
+  methods: _extends$3({}, mapMutations(['removeValue', 'setValue', 'exchanceItem']), {
     remveItem: function remveItem(idx) {
       if (this.len > this.minItems) {
         this.len = this.len - 1;
@@ -2809,7 +2840,7 @@ var __vue_is_functional_template__$g = false;
 
 var Horizontal = normalizeComponent_1({ render: __vue_render__$g, staticRenderFns: __vue_staticRenderFns__$g }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g, __vue_module_identifier__$g, undefined, undefined);
 
-var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var script$h = {
   props: {
@@ -2837,7 +2868,7 @@ var script$h = {
   components: {
     'bootstrap': Horizontal
   },
-  methods: _extends$3({}, mapMutations(['init']))
+  methods: _extends$4({}, mapMutations(['init']))
 };
 
 /* script */
@@ -3126,7 +3157,7 @@ function dateRule (def, schema) {
   }
 }
 
-var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function fieldsetRule (def, schema, options) {
   var _this = this;
@@ -3162,7 +3193,7 @@ function fieldsetRule (def, schema, options) {
 
       var required = schema.required && _$2.indexOf(schema.required, key) !== -1;
 
-      _this._parse(key, val, def.items, _extends$4({}, options, {
+      _this._parse(key, val, def.items, _extends$5({}, options, {
         path: path,
         required: required,
         lookup: options.lookup
@@ -10636,7 +10667,7 @@ var defaults$4 = {
     phone: /^1[3|4|5|6|7|8|9]\d{9}$/,
     mobile: /^1[3|4|5|6|7|8|9]\d{9}$/,
     'date-time': /^\d\d\d\d-[0-1]\d-[0-3]\d[t\s](?:[0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(?:\.\d+)?(?:z|[+-]\d\d:\d\d)?$/i,
-    image: /^https?:\/\/\w+(\.gif|\.jpeg|\.png|\.jpg|\.bmp)$/i
+    image: /\w+(\.gif|\.jpeg|\.png|\.jpg|\.bmp)$/i
   }
 };
 
@@ -10886,7 +10917,6 @@ var init = function init(state, _ref) {
 
   var data = generator.getDefaultModal(schema);
   state.model = _extend_3_0_2_extend(true, {}, data, model);
-  console.log(1111, data, model, state.model);
   state.ajv = new Ajv$1();
   state.messages = {};
   state.valid = true;
@@ -11091,7 +11121,7 @@ var getters = /*#__PURE__*/Object.freeze({
   getSchema: getSchema$1
 });
 
-var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$6 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var state$1 = {
   schema: {},
@@ -11108,8 +11138,8 @@ var state$1 = {
 
 var Store = {
   state: state$1,
-  mutations: _extends$5({}, mutations),
-  getters: _extends$5({}, getters)
+  mutations: _extends$6({}, mutations),
+  getters: _extends$6({}, getters)
 };
 
 function styleInject(css, ref) {
@@ -11139,7 +11169,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".form-horizontal {\n  padding: 20px 20px 0;\n}\n.form-horizontal .fieldset {\n  padding: 20px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n}\n.form-horizontal .list-group .list-group-item {\n  position: relative;\n  padding: 10px 30px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-remove,\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-up,\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-down {\n  position: absolute;\n  right: 10px;\n  width: 16px;\n  cursor: pointer;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-remove {\n  top: 10px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-up {\n  top: 30px;\n  right: 9px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-down {\n  top: 50px;\n}\n.form-horizontal .list-group .form-group {\n  margin-bottom: 0;\n}\n.form-horizontal .tab-pane {\n  padding: 20px 0;\n}\n.form-group > label {\n  display: block;\n}\n.form-group .required {\n  display: inline-block;\n  color: #a94442;\n}\n.form-group .form-tips {\n  margin-top: 5px;\n  color: #999;\n}\n.form-group.has-error .form-tips {\n  color: #a94442;\n}\n.form-group .image-upload > .value {\n  display: inline-block;\n  margin-top: 8px;\n}\n.form-group .picture-input .preview-container {\n  width: 100%;\n  box-sizing: border-box;\n  overflow: hidden;\n  cursor: pointer;\n  background-color: rgba(200, 200, 200, 0.25);\n}\n.form-group .picture-input .picture-preview {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n}\n.form-group .picture-input .picture-inner {\n  display: table;\n  position: relative;\n  margin: 0 auto;\n  width: 90%;\n  height: 90%;\n  box-sizing: border-box;\n  padding: 5px;\n  border: 4px dashed rgba(66, 66, 66, 0.15);\n  pointer-events: none;\n}\n.form-group .picture-input .picture-inner .picture-inner-text {\n  display: table-cell;\n  line-height: 1.5;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n}\n.form-group .picture-input input[type=file] {\n  display: none;\n}\n";
+var css = ".form-horizontal {\n  padding: 20px 20px 0;\n}\n.form-horizontal .fieldset {\n  padding: 20px;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n}\n.form-horizontal .list-group .list-group-item {\n  position: relative;\n  padding: 10px 30px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-remove,\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-up,\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-down {\n  position: absolute;\n  right: 10px;\n  width: 16px;\n  cursor: pointer;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-remove {\n  top: 10px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-up {\n  top: 30px;\n  right: 9px;\n}\n.form-horizontal .list-group .list-group-item > .glyphicon-chevron-down {\n  top: 50px;\n}\n.form-horizontal .list-group .form-group {\n  margin-bottom: 0;\n}\n.form-horizontal .tab-pane {\n  padding: 20px 0;\n}\n.form-group > label {\n  display: block;\n}\n.form-group .required {\n  display: inline-block;\n  color: #a94442;\n}\n.form-group .form-tips {\n  margin-top: 5px;\n  color: #999;\n}\n.form-group.has-error .form-tips {\n  color: #a94442;\n}\n.form-group .image-upload > .value {\n  display: inline-block;\n  margin-top: 8px;\n  word-break: break-all;\n  word-wrap: break-word;\n}\n.form-group .picture-input .preview-container {\n  width: 100%;\n  box-sizing: border-box;\n  overflow: hidden;\n  cursor: pointer;\n  background-color: rgba(200, 200, 200, 0.25);\n}\n.form-group .picture-input .picture-preview {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n}\n.form-group .picture-input .picture-inner {\n  display: table;\n  position: relative;\n  margin: 0 auto;\n  width: 90%;\n  height: 90%;\n  box-sizing: border-box;\n  padding: 5px;\n  border: 4px dashed rgba(66, 66, 66, 0.15);\n  pointer-events: none;\n}\n.form-group .picture-input .picture-inner .picture-inner-text {\n  display: table-cell;\n  line-height: 1.5;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n}\n.form-group .picture-input input[type=file] {\n  display: none;\n}\n";
 styleInject(css);
 
 function install(Vue) {
