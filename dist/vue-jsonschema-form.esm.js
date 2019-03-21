@@ -1231,7 +1231,6 @@ var defaults$2 = {
       var image = 'data:image/' + blobInfo.filename().split('.')[1] + ';base64,' + blobInfo.base64();
 
       store$1.dispatch('uploadImage', image).then(function (uri) {
-        console.log(1111, uri);
         success(uri);
       }).catch(function (err) {
         console.error(err);
@@ -2183,7 +2182,7 @@ var defaults$3 = {
   radius: 0,
   plain: false,
   accept: 'image/*',
-  size: 2,
+  size: 5,
   removable: false,
   hideChangeButton: true,
   buttonClass: 'btn btn-primary',
@@ -2191,15 +2190,15 @@ var defaults$3 = {
   zIndex: 1000,
   alertOnError: true,
   customStrings: {
-    upload: '<p>Your device does not support file uploading.</p>',
-    drag: 'Drag an image or <br>click here to select a file',
+    upload: '<p>当前浏览器不支持图片上传功能.</p>',
+    drag: '拖拽图片 或者 <br>点击选择文件',
     tap: 'Tap here to select a photo <br>from your gallery',
-    change: 'Change Photo',
-    remove: 'Remove Photo',
-    select: 'Select a Photo',
-    selected: '<p>Photo successfully selected!</p>',
-    fileSize: 'The file size exceeds the limit',
-    fileType: 'This file type is not supported.',
+    change: '更改',
+    remove: '删除',
+    select: '选择',
+    selected: '<p>选择成功</p>',
+    fileSize: '文件大小超过限制',
+    fileType: '不支持的文件类型',
     aspect: 'Landscape/Portrait'
   }
 };
@@ -2222,10 +2221,11 @@ var script$b = {
     this.initialize = true;
 
     this.$watch('value', function (newValue) {
-      if (_this.initialize) {
-        _this.initializeValue = newValue;
-        _this.initialize = false;
-      }
+      // if (this.initialize) {
+      console.log(11111, newValue);
+      _this.initializeValue = newValue;
+      _this.initialize = false;
+      // }
     }, {
       immediate: true
     });

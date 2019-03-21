@@ -39,7 +39,7 @@ const defaults = {
   radius: 0,
   plain: false,
   accept: 'image/*',
-  size: 2,
+  size: 5,
   removable: false,
   hideChangeButton: true,
   buttonClass: 'btn btn-primary',
@@ -47,15 +47,15 @@ const defaults = {
   zIndex: 1000,
   alertOnError: true,
   customStrings: {
-    upload: '<p>Your device does not support file uploading.</p>',
-    drag: 'Drag an image or <br>click here to select a file',
+    upload: '<p>当前浏览器不支持图片上传功能.</p>',
+    drag: '拖拽图片 或者 <br>点击选择文件',
     tap: 'Tap here to select a photo <br>from your gallery',
-    change: 'Change Photo',
-    remove: 'Remove Photo',
-    select: 'Select a Photo',
-    selected: '<p>Photo successfully selected!</p>',
-    fileSize: 'The file size exceeds the limit',
-    fileType: 'This file type is not supported.',
+    change: '更改',
+    remove: '删除',
+    select: '选择',
+    selected: '<p>选择成功</p>',
+    fileSize: '文件大小超过限制',
+    fileType: '不支持的文件类型',
     aspect: 'Landscape/Portrait'
   }
 }
@@ -72,13 +72,8 @@ export default {
     }
   },
   created () {
-    this.initialize = true
-
     this.$watch('value', newValue => {
-      if (this.initialize) {
-        this.initializeValue = newValue
-        this.initialize = false
-      }
+      this.initializeValue = newValue
     }, {
       immediate: true
     })
