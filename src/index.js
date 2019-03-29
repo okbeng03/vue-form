@@ -1,4 +1,7 @@
 import VueForm from './components/vue-form.vue'
+import basicMixin from './components/mixins/basic.js'
+import objectMixin from './components/mixins/object.js'
+import arrayMixin from './components/mixins/array.js'
 import Store from './vuex/store'
 import './css/index.less'
 
@@ -22,6 +25,11 @@ export function install (Vue, options = {}) {
 	Vue.component('vue-form', VueForm)
 }
 
+export const mixins = {
+	basicMixin,
+	objectMixin,
+	arrayMixin
+}
 export const VueJSONSchemaForm = VueForm
 export const store = Store
 // export validator

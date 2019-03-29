@@ -1,5 +1,6 @@
 import * as mutations from './mutations'
 import * as getters from './getters'
+import Generator from '../core/schema'
 
 const state = {
   schema: {},
@@ -11,7 +12,8 @@ const state = {
   ajv: null,
   validator: null,
   // exclude: [],  // 需要排除的校验字段
-  isRootArray: false
+  isRootArray: false,
+  generator: new Generator()
 }
 
 export default {

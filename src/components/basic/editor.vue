@@ -11,7 +11,7 @@
 import vEditor from '@tinymce/tinymce-vue'
 import extend from 'extend'
 import basicMixin from '../mixins/basic.js'
-import store from '@/store'
+import store from '../../vuex/store'
 
 const plugins = [
   'lists',

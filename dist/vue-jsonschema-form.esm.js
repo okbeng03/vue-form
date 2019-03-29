@@ -1,7 +1,6 @@
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import Vue from 'vue';
 import _$2 from 'lodash';
-import store$1 from '@/store';
 import 'axios';
 import draggable from 'vuedraggable';
 
@@ -1208,1877 +1207,6 @@ var Editor = {
  *
  */
 
-//
-
-var plugins = ['lists', 'advlist', 'image', 'table', 'textcolor', 'colorpicker', 'codesample', 'contextmenu', 'link', 'fullscreen', 'help', 'preview', 'searchreplace', 'hr', 'wordcount', 'autosave'
-// 'powerpaste'
-];
-var toolbars = ['undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | table hr link image | searchreplace | fullscreen preview help'];
-
-var defaults$2 = {
-  init: {
-    height: 500,
-    contextmenu: 'link image inserttable | cell row column deletetable',
-    default_link_target: '_blank',
-    external_plugins: {
-      'powerpaste': '/style/cms/powerpaste/plugin.js'
-    },
-    powerpaste_allow_local_images: true,
-    powerpaste_word_import: 'prompt',
-    powerpaste_html_import: 'prompt',
-    image_advtab: true,
-    images_upload_handler: function images_upload_handler(blobInfo, success, failure) {
-      var image = 'data:image/' + blobInfo.filename().split('.')[1] + ';base64,' + blobInfo.base64();
-
-      store$1.dispatch('uploadImage', image).then(function (uri) {
-        success(uri);
-      }).catch(function (err) {
-        console.error(err);
-        failure(err.message || '');
-      });
-    }
-  }
-};
-
-var script$9 = {
-  computed: {
-    config: function config() {
-      var config = this.definition.config || {};
-      var plugin = plugins.slice();
-      var toolbar = toolbars.slice();
-
-      if (config.plugins) {
-        plugin = plugin.concat(config.plugins.split(' '));
-        plugin = _.uniq(plugin);
-        delete config.plugins;
-      }
-
-      if (config.toolbar) {
-        toolbar.push(config.toolbar);
-        delete config.toolbar;
-      }
-
-      return _extend_3_0_2_extend(true, {}, defaults$2, config, {
-        init: {
-          plugins: plugin.join(' '),
-          toolbar: toolbar
-        }
-      });
-    }
-  },
-  mixins: [basicMixin],
-  components: {
-    vEditor: Editor
-  }
-};
-
-/* script */
-var __vue_script__$9 = script$9;
-
-/* template */
-var __vue_render__$9 = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("v-editor", {
-    attrs: { disabled: _vm.definition.disabled, init: _vm.config.init },
-    model: {
-      value: _vm.value,
-      callback: function callback($$v) {
-        _vm.value = $$v;
-      },
-      expression: "value"
-    }
-  });
-};
-var __vue_staticRenderFns__$9 = [];
-__vue_render__$9._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$9 = undefined;
-/* scoped */
-var __vue_scope_id__$9 = undefined;
-/* module identifier */
-var __vue_module_identifier__$9 = undefined;
-/* functional template */
-var __vue_is_functional_template__$9 = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Editor$1 = normalizeComponent_1({ render: __vue_render__$9, staticRenderFns: __vue_staticRenderFns__$9 }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9, __vue_module_identifier__$9, undefined, undefined);
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var script$a = {
-  name: 'picture-input',
-  props: {
-    width: {
-      type: [String, Number],
-      default: Number.MAX_SAFE_INTEGER
-    },
-    height: {
-      type: [String, Number],
-      default: Number.MAX_SAFE_INTEGER
-    },
-    margin: {
-      type: [String, Number],
-      default: 0
-    },
-    accept: {
-      type: String,
-      default: 'image/*'
-    },
-    size: {
-      type: [String, Number],
-      default: Number.MAX_SAFE_INTEGER
-    },
-    name: {
-      type: String,
-      default: null
-    },
-    id: {
-      type: [String, Number],
-      default: null
-    },
-    buttonClass: {
-      type: String,
-      default: 'btn btn-primary button'
-    },
-    removeButtonClass: {
-      type: String,
-      default: 'btn btn-secondary button secondary'
-    },
-    aspectButtonClass: {
-      type: String,
-      default: 'btn btn-secondary button secondary'
-    },
-    prefill: {
-      type: [String, File],
-      default: ''
-    },
-    prefillOptions: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    },
-    crop: {
-      type: Boolean,
-      default: true
-    },
-    radius: {
-      type: [String, Number],
-      default: 0
-    },
-    removable: {
-      type: Boolean,
-      default: false
-    },
-    hideChangeButton: {
-      type: Boolean,
-      default: false
-    },
-    autoToggleAspectRatio: {
-      type: Boolean,
-      default: false
-    },
-    toggleAspectRatio: {
-      type: Boolean,
-      default: false
-    },
-    changeOnClick: {
-      type: Boolean,
-      default: true
-    },
-    plain: {
-      type: Boolean,
-      default: false
-    },
-    zIndex: {
-      type: Number,
-      default: 10000
-    },
-    alertOnError: {
-      type: Boolean,
-      default: true
-    },
-    customStrings: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    }
-  },
-  watch: {
-    prefill () {
-      if (this.prefill) {
-        this.preloadImage(this.prefill, this.prefillOptions);
-      } else {
-        this.removeImage();
-      }
-    }
-  },
-  data () {
-    return {
-      imageSelected: false,
-      previewHeight: 0,
-      previewWidth: 0,
-      draggingOver: false,
-      canvasWidth: 0,
-      canvasHeight: 0,
-      strings: {
-        upload: '<p>Your device does not support file uploading.</p>',
-        drag: 'Drag an image or <br>click here to select a file',
-        tap: 'Tap here to select a photo <br>from your gallery',
-        change: 'Change Photo',
-        aspect: 'Landscape/Portrait',
-        remove: 'Remove Photo',
-        select: 'Select a Photo',
-        selected: '<p>Photo successfully selected!</p>',
-        fileSize: 'The file size exceeds the limit',
-        fileType: 'This file type is not supported.'
-      }
-    }
-  },
-  mounted () {
-    this.updateStrings();
-    if (this.prefill) {
-      this.preloadImage(this.prefill, this.prefillOptions);
-    }
-
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize);
-      this.onResize();
-    });
-    if (this.supportsPreview) {
-      this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI);
-      const canvas = this.$refs.previewCanvas;
-      if (canvas.getContext) {
-        this.context = canvas.getContext('2d');
-        this.context.scale(this.pixelRatio, this.pixelRatio);
-      }
-    }
-    if (this.accept !== 'image/*') {
-      this.fileTypes = this.accept.split(',');
-      this.fileTypes = this.fileTypes.map(s => s.trim());
-    }
-
-    this.canvasWidth = this.width;
-    this.canvasHeight = this.height;
-
-    this.$on('error', this.onError);
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.onResize);
-    this.$off('error', this.onError);
-  },
-  methods: {
-    updateStrings () {
-      for (let s in this.customStrings) {
-        if (s in this.strings && typeof this.customStrings[s] === 'string') {
-          this.strings[s] = this.customStrings[s];
-        }
-      }
-    },
-    onClick () {
-      if (!this.imageSelected) {
-        this.selectImage();
-        return
-      }
-
-      if (this.changeOnClick) {
-        this.selectImage();
-      }
-
-      this.$emit('click');
-    },
-    onResize () {
-      this.resizeCanvas();
-
-      if (this.imageObject) {
-        this.drawImage(this.imageObject);
-      }
-    },
-    onDragStart () {
-      if (!this.supportsDragAndDrop) {
-        return
-      }
-      this.draggingOver = true;
-    },
-    onDragStop () {
-      if (!this.supportsDragAndDrop) {
-        return
-      }
-      this.draggingOver = false;
-    },
-    onFileDrop (e) {
-      this.onDragStop();
-      this.onFileChange(e);
-    },
-    onFileChange (e, prefill) {
-      let files = e.target.files || e.dataTransfer.files;
-      if (!files.length) {
-        return
-      }
-      if (files[0].size <= 0 || files[0].size > this.size * 1024 * 1024) {
-        this.$emit('error', {
-          type: 'fileSize',
-          fileSize: files[0].size,
-          fileType: files[0].type,
-          fileName: files[0].name,
-          message: this.strings.fileSize + ' (' + this.size + 'MB)'
-        });
-        return
-      }
-      if (files[0].name === this.fileName && files[0].size === this.fileSize && this.fileModified === files[0].lastModified) {
-        return
-      }
-
-      this.file = files[0];
-      this.fileName = files[0].name;
-      this.fileSize = files[0].size;
-      this.fileModified = files[0].lastModified;
-      this.fileType = files[0].type;
-
-      if (this.accept === 'image/*') {
-        if (files[0].type.substr(0, 6) !== 'image/') {
-          return
-        }
-      } else {
-        if (this.fileTypes.indexOf(files[0].type) === -1) {
-          this.$emit('error', {
-            type: 'fileType',
-            fileSize: files[0].size,
-            fileType: files[0].type,
-            fileName: files[0].name,
-            message: this.strings.fileType
-          });
-          return
-        }
-      }
-      this.imageSelected = true;
-      this.image = '';
-      if (this.supportsPreview) {
-        this.loadImage(files[0], prefill || false);
-      } else {
-        if (prefill) {
-          this.$emit('prefill');
-        } else {
-          this.$emit('change', this.image);
-        }
-      }
-    },
-    onError (error) {
-      if (this.alertOnError) {
-        alert(error.message);
-      }
-    },
-    loadImage (file, prefill) {
-      this.getEXIFOrientation(file, orientation => {
-        this.setOrientation(orientation);
-        let reader = new FileReader();
-        reader.onload = e => {
-          this.image = e.target.result;
-          if (prefill) {
-            this.$emit('prefill');
-          } else {
-            this.$emit('change', this.image);
-          }
-          this.imageObject = new Image();
-          this.imageObject.onload = () => {
-            if (this.autoToggleAspectRatio) {
-              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight);
-              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height);
-              if (canvasOrientation !== imageOrientation) {
-                this.rotateCanvas();
-              }
-            }
-            this.drawImage(this.imageObject);
-          };
-          this.imageObject.src = this.image;
-        };
-        reader.readAsDataURL(file);
-      });
-    },
-    drawImage (image) {
-      this.imageWidth = image.width;
-      this.imageHeight = image.height;
-      this.imageRatio = image.width / image.height;
-      let offsetX = 0;
-      let offsetY = 0;
-      let scaledWidth = this.previewWidth;
-      let scaledHeight = this.previewHeight;
-      const previewRatio = this.previewWidth / this.previewHeight;
-      if (this.crop) {
-        if (this.imageRatio >= previewRatio) {
-          scaledWidth = scaledHeight * this.imageRatio;
-          offsetX = (this.previewWidth - scaledWidth) / 2;
-        } else {
-          scaledHeight = scaledWidth / this.imageRatio;
-          offsetY = (this.previewHeight - scaledHeight) / 2;
-        }
-      } else {
-        if (this.imageRatio >= previewRatio) {
-          scaledHeight = scaledWidth / this.imageRatio;
-          offsetY = (this.previewHeight - scaledHeight) / 2;
-        } else {
-          scaledWidth = scaledHeight * this.imageRatio;
-          offsetX = (this.previewWidth - scaledWidth) / 2;
-        }
-      }
-      const canvas = this.$refs.previewCanvas;
-      canvas.style.background = 'none';
-      canvas.width = this.previewWidth * this.pixelRatio;
-      canvas.height = this.previewHeight * this.pixelRatio;
-      this.context.setTransform(1, 0, 0, 1, 0, 0);
-      this.context.clearRect(0, 0, canvas.width, canvas.height);
-      if (this.rotate) {
-        this.context.translate(offsetX * this.pixelRatio, offsetY * this.pixelRatio);
-        this.context.translate(scaledWidth / 2 * this.pixelRatio, scaledHeight / 2 * this.pixelRatio);
-        this.context.rotate(this.rotate);
-        offsetX = -scaledWidth / 2;
-        offsetY = -scaledHeight / 2;
-      }
-      this.context.drawImage(image,
-        offsetX * this.pixelRatio,
-        offsetY * this.pixelRatio,
-        scaledWidth * this.pixelRatio,
-        scaledHeight * this.pixelRatio);
-    },
-    selectImage () {
-      this.$refs.fileInput.click();
-    },
-    removeImage () {
-      this.$refs.fileInput.value = '';
-      this.$refs.fileInput.type = '';
-      this.$refs.fileInput.type = 'file';
-      this.fileName = '';
-      this.fileType = '';
-      this.fileSize = 0;
-      this.fileModified = 0;
-      this.imageSelected = false;
-      this.image = '';
-      this.file = null;
-      this.imageObject = null;
-      this.$refs.previewCanvas.style.backgroundColor = 'rgba(200,200,200,.25)';
-      this.$refs.previewCanvas.width = this.previewWidth * this.pixelRatio;
-      this.$emit('remove');
-    },
-    rotateImage () {
-      this.rotateCanvas();
-
-      if (this.imageObject) {
-        this.drawImage(this.imageObject);
-      }
-
-      let newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight);
-      this.$emit('aspectratiochange', newOrientation);
-    },
-    resizeCanvas () {
-      let previewRatio = this.canvasWidth / this.canvasHeight;
-      let newWidth = this.$refs.container.clientWidth;
-      if (!this.toggleAspectRatio && newWidth === this.containerWidth) {
-        return
-      }
-      this.containerWidth = newWidth;
-      this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth);
-      this.previewHeight = this.previewWidth / previewRatio;
-    },
-    getOrientation (width, height) {
-      let orientation = 'square';
-
-      if (width > height) {
-        orientation = 'landscape';
-      } else if (width < height) {
-        orientation = 'portrait';
-      }
-
-      return orientation
-    },
-    switchCanvasOrientation () {
-      const canvasWidth = this.canvasWidth;
-      const canvasHeight = this.canvasHeight;
-
-      this.canvasWidth = canvasHeight;
-      this.canvasHeight = canvasWidth;
-    },
-    rotateCanvas () {
-      this.switchCanvasOrientation();
-      this.resizeCanvas();
-    },
-    setOrientation (orientation) {
-      this.rotate = false;
-      if (orientation === 8) {
-        this.rotate = -Math.PI / 2;
-      } else if (orientation === 6) {
-        this.rotate = Math.PI / 2;
-      } else if (orientation === 3) {
-        this.rotate = -Math.PI;
-      }
-    },
-    getEXIFOrientation (file, callback) {
-      var reader = new FileReader();
-      reader.onload = e => {
-        var view = new DataView(e.target.result);
-        if (view.getUint16(0, false) !== 0xFFD8) {
-          return callback(-2)
-        }
-        var length = view.byteLength;
-        var offset = 2;
-        while (offset < length) {
-          var marker = view.getUint16(offset, false);
-          offset += 2;
-          if (marker === 0xFFE1) {
-            if (view.getUint32(offset += 2, false) !== 0x45786966) {
-              return callback(-1)
-            }
-            var little = view.getUint16(offset += 6, false) === 0x4949;
-            offset += view.getUint32(offset + 4, little);
-            var tags = view.getUint16(offset, little);
-            offset += 2;
-            for (var i = 0; i < tags; i++) {
-              if (view.getUint16(offset + (i * 12), little) === 0x0112) {
-                return callback(view.getUint16(offset + (i * 12) + 8, little))
-              }
-            }
-          } else if ((marker & 0xFF00) !== 0xFF00) {
-            break
-          } else {
-            offset += view.getUint16(offset, false);
-          }
-        }
-        return callback(-1)
-      };
-      reader.readAsArrayBuffer(file.slice(0, 65536));
-    },
-    preloadImage (source, options) {
-      // ie 11 support
-      let File = window.File;
-      try {
-        new File([], ''); // eslint-disable-line
-      } catch (e) {
-        File = class File extends Blob {
-          constructor (chunks, filename, opts = {}) {
-            super(chunks, opts);
-            this.lastModifiedDate = new Date();
-            this.lastModified = +this.lastModifiedDate;
-            this.name = filename;
-          }
-        };
-      }
-      options = Object.assign({}, options);
-      if (typeof source === 'object') {
-        this.imageSelected = true;
-        this.image = '';
-        if (this.supportsPreview) {
-          this.loadImage(source, true);
-        } else {
-          this.$emit('prefill');
-        }
-        return
-      }
-      let headers = new Headers();
-      headers.append('Accept', 'image/*');
-      fetch(source, {
-        method: 'GET',
-        mode: 'cors',
-        headers: headers
-      }).then(response => {
-        return response.blob()
-      })
-      .then(imageBlob => {
-        let e = { target: { files: [] } };
-        const fileName = options.fileName || source.split('/').slice(-1)[0];
-        let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0]));
-        mediaType = mediaType.replace('jpg', 'jpeg');
-        e.target.files[0] = new File([imageBlob], fileName, { type: mediaType });
-        this.onFileChange(e, true);
-      })
-      .catch(err => {
-        this.$emit('error', {
-          type: 'failedPrefill',
-          message: 'Failed loading prefill image: ' + err
-        });
-      });
-    }
-  },
-  computed: {
-    supportsUpload () {
-      if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) {
-        return false
-      }
-      const el = document.createElement('input');
-      el.type = 'file';
-      return !el.disabled
-    },
-    supportsPreview () {
-      return window.FileReader && !!window.CanvasRenderingContext2D
-    },
-    supportsDragAndDrop () {
-      const div = document.createElement('div');
-      return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)
-    },
-    computedClasses () {
-      const classObject = {};
-      classObject['dragging-over'] = this.draggingOver;
-      return classObject
-    },
-    fontSize () {
-      return Math.min(0.04 * this.previewWidth, 21) + 'px'
-    }
-  }
-};
-
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-function createInjector(context) {
-  return function (id, style) {
-    return addStyle(id, style);
-  };
-}
-var HEAD = document.head || document.getElementsByTagName('head')[0];
-var styles = {};
-
-function addStyle(id, css) {
-  var group = isOldIE ? css.media || 'default' : id;
-  var style = styles[group] || (styles[group] = {
-    ids: new Set(),
-    styles: []
-  });
-
-  if (!style.ids.has(id)) {
-    style.ids.add(id);
-    var code = css.source;
-
-    if (css.map) {
-      // https://developer.chrome.com/devtools/docs/javascript-debugging
-      // this makes source maps inside style tags work properly in Chrome
-      code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-      code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
-    }
-
-    if (!style.element) {
-      style.element = document.createElement('style');
-      style.element.type = 'text/css';
-      if (css.media) style.element.setAttribute('media', css.media);
-      HEAD.appendChild(style.element);
-    }
-
-    if ('styleSheet' in style.element) {
-      style.styles.push(code);
-      style.element.styleSheet.cssText = style.styles.filter(Boolean).join('\n');
-    } else {
-      var index = style.ids.size - 1;
-      var textNode = document.createTextNode(code);
-      var nodes = style.element.childNodes;
-      if (nodes[index]) style.element.removeChild(nodes[index]);
-      if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-    }
-  }
-}
-
-var browser = createInjector;
-
-/* script */
-const __vue_script__$a = script$a;
-
-/* template */
-var __vue_render__$a = function() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c(
-    "div",
-    {
-      ref: "container",
-      staticClass: "picture-input",
-      attrs: { id: "picture-input" }
-    },
-    [
-      !_vm.supportsUpload
-        ? _c("div", { domProps: { innerHTML: _vm._s(_vm.strings.upload) } })
-        : _vm.supportsPreview
-        ? _c("div", [
-            _c(
-              "div",
-              {
-                staticClass: "preview-container",
-                style: {
-                  maxWidth: _vm.previewWidth + "px",
-                  height: _vm.previewHeight + "px",
-                  borderRadius: _vm.radius + "%"
-                }
-              },
-              [
-                _c("canvas", {
-                  ref: "previewCanvas",
-                  staticClass: "picture-preview",
-                  class: _vm.computedClasses,
-                  style: {
-                    height: _vm.previewHeight + "px",
-                    zIndex: _vm.zIndex + 1
-                  },
-                  on: {
-                    drag: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                    },
-                    dragover: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                    },
-                    dragstart: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                      return _vm.onDragStart($event)
-                    },
-                    dragenter: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                      return _vm.onDragStart($event)
-                    },
-                    dragend: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                      return _vm.onDragStop($event)
-                    },
-                    dragleave: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                      return _vm.onDragStop($event)
-                    },
-                    drop: function($event) {
-                      $event.stopPropagation();
-                      $event.preventDefault();
-                      return _vm.onFileDrop($event)
-                    },
-                    click: function($event) {
-                      $event.preventDefault();
-                      return _vm.onClick($event)
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                !_vm.imageSelected && !_vm.plain
-                  ? _c(
-                      "div",
-                      {
-                        staticClass: "picture-inner",
-                        style: {
-                          top: -_vm.previewHeight + "px",
-                          marginBottom: -_vm.previewHeight + "px",
-                          fontSize: _vm.fontSize,
-                          borderRadius: _vm.radius + "%",
-                          zIndex: _vm.zIndex + 2
-                        }
-                      },
-                      [
-                        _vm.supportsDragAndDrop
-                          ? _c("span", {
-                              staticClass: "picture-inner-text",
-                              domProps: { innerHTML: _vm._s(_vm.strings.drag) }
-                            })
-                          : _c("span", {
-                              staticClass: "picture-inner-text",
-                              domProps: { innerHTML: _vm._s(_vm.strings.tap) }
-                            })
-                      ]
-                    )
-                  : _vm._e()
-              ]
-            ),
-            _vm._v(" "),
-            _vm.imageSelected && !_vm.hideChangeButton
-              ? _c(
-                  "button",
-                  {
-                    class: _vm.buttonClass,
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault();
-                        return _vm.selectImage($event)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.strings.change))]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.imageSelected && _vm.removable
-              ? _c(
-                  "button",
-                  {
-                    class: _vm.removeButtonClass,
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault();
-                        return _vm.removeImage($event)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.strings.remove))]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.imageSelected &&
-            _vm.toggleAspectRatio &&
-            _vm.width !== _vm.height
-              ? _c(
-                  "button",
-                  {
-                    class: _vm.aspectButtonClass,
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault();
-                        return _vm.rotateImage($event)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.strings.aspect))]
-                )
-              : _vm._e()
-          ])
-        : _c("div", [
-            !_vm.imageSelected
-              ? _c(
-                  "button",
-                  {
-                    class: _vm.buttonClass,
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault();
-                        return _vm.selectImage($event)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.strings.select))]
-                )
-              : _c("div", [
-                  _c("div", {
-                    domProps: { innerHTML: _vm._s(_vm.strings.selected) }
-                  }),
-                  _vm._v(" "),
-                  !_vm.hideChangeButton
-                    ? _c(
-                        "button",
-                        {
-                          class: _vm.buttonClass,
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault();
-                              return _vm.selectImage($event)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(_vm.strings.change))]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.removable
-                    ? _c(
-                        "button",
-                        {
-                          class: _vm.removeButtonClass,
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault();
-                              return _vm.removeImage($event)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(_vm.strings.remove))]
-                      )
-                    : _vm._e()
-                ])
-          ]),
-      _vm._v(" "),
-      _c("input", {
-        ref: "fileInput",
-        attrs: { type: "file", name: _vm.name, id: _vm.id, accept: _vm.accept },
-        on: { change: _vm.onFileChange }
-      })
-    ]
-  )
-};
-var __vue_staticRenderFns__$a = [];
-__vue_render__$a._withStripped = true;
-
-  /* style */
-  const __vue_inject_styles__$a = function (inject) {
-    if (!inject) return
-    inject("data-v-4ae4354e_0", { source: "\n.picture-input[data-v-4ae4354e] {\n  width: 100%;\n  margin: 0 auto;\n  text-align: center;\n}\n.preview-container[data-v-4ae4354e] {\n  width: 100%;\n  box-sizing: border-box;\n  margin: 0 auto;\n  cursor: pointer;\n  overflow: hidden;\n}\n.picture-preview[data-v-4ae4354e] {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  z-index: 10001;\n  box-sizing: border-box;\n  background-color: rgba(200,200,200,.25);\n}\n.picture-preview.dragging-over[data-v-4ae4354e] {\n  filter: brightness(0.5);\n}\n.picture-inner[data-v-4ae4354e] {\n  position: relative;\n  z-index: 10002;\n  pointer-events: none;\n  box-sizing: border-box;\n  margin: 1em auto;\n  padding: 0.5em;\n  border: .3em dashed rgba(66,66,66,.15);\n  border-radius: 8px;\n  width: calc(100% - 2.5em);\n  height: calc(100% - 2.5em);\n  display: table;\n}\n.picture-inner .picture-inner-text[data-v-4ae4354e] {\n  display: table-cell;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n  line-height: 1.5;\n}\nbutton[data-v-4ae4354e] {\n  margin: 1em .25em;\n  cursor: pointer;\n}\ninput[type=file][data-v-4ae4354e] {\n  display: none;\n}\n", map: {"version":3,"sources":["/Users/wangchangbin/git/vue-form/node_modules/_vue-picture-input@2.1.6@vue-picture-input/PictureInput.vue"],"names":[],"mappings":";AAqjBA;EACA,WAAA;EACA,cAAA;EACA,kBAAA;AACA;AACA;EACA,WAAA;EACA,sBAAA;EACA,cAAA;EACA,eAAA;EACA,gBAAA;AACA;AACA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,cAAA;EACA,sBAAA;EACA,uCAAA;AACA;AACA;EACA,uBAAA;AACA;AACA;EACA,kBAAA;EACA,cAAA;EACA,oBAAA;EACA,sBAAA;EACA,gBAAA;EACA,cAAA;EACA,sCAAA;EACA,kBAAA;EACA,yBAAA;EACA,0BAAA;EACA,cAAA;AACA;AACA;EACA,mBAAA;EACA,sBAAA;EACA,kBAAA;EACA,cAAA;EACA,gBAAA;AACA;AACA;EACA,iBAAA;EACA,eAAA;AACA;AACA;EACA,aAAA;AACA","file":"PictureInput.vue","sourcesContent":["<template>\n  <div ref=\"container\" id=\"picture-input\" class=\"picture-input\">\n    <div v-if=\"!supportsUpload\" v-html=\"strings.upload\"></div>\n    <div v-else-if=\"supportsPreview\">\n      <div class=\"preview-container\"\n        :style=\"{maxWidth: previewWidth + 'px', height: previewHeight + 'px', borderRadius: radius + '%'}\">\n          <canvas ref=\"previewCanvas\"\n            class=\"picture-preview\"\n            :class=\"computedClasses\"\n            @drag.stop.prevent=\"\"\n            @dragover.stop.prevent=\"\"\n            @dragstart.stop.prevent=\"onDragStart\"\n            @dragenter.stop.prevent=\"onDragStart\"\n            @dragend.stop.prevent=\"onDragStop\"\n            @dragleave.stop.prevent=\"onDragStop\"\n            @drop.stop.prevent=\"onFileDrop\"\n            @click.prevent=\"onClick\"\n            :style=\"{height: previewHeight + 'px', zIndex: zIndex + 1 }\">\n          </canvas>\n        <div v-if=\"!imageSelected && !plain\"\n          class=\"picture-inner\"\n            :style=\"{top: -previewHeight + 'px', marginBottom: -previewHeight + 'px', fontSize: fontSize, borderRadius: radius + '%', zIndex: zIndex + 2}\">\n          <span v-if=\"supportsDragAndDrop\" class=\"picture-inner-text\" v-html=\"strings.drag\"></span>\n          <span v-else class=\"picture-inner-text\" v-html=\"strings.tap\"></span>\n        </div>\n      </div>\n      <button v-if=\"imageSelected && !hideChangeButton\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.change }}</button>\n      <button v-if=\"imageSelected && removable\" @click.prevent=\"removeImage\" :class=\"removeButtonClass\">{{ strings.remove }}</button>\n      <button v-if=\"imageSelected && toggleAspectRatio && width !== height\" @click.prevent=\"rotateImage\" :class=\"aspectButtonClass\">{{ strings.aspect }}</button>\n    </div>\n    <div v-else>\n      <button v-if=\"!imageSelected\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.select }}</button>\n      <div v-else>\n        <div v-html=\"strings.selected\"></div>\n        <button v-if=\"!hideChangeButton\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.change }}</button>\n        <button v-if=\"removable\" @click.prevent=\"removeImage\" :class=\"removeButtonClass\">{{ strings.remove }}</button>\n      </div>\n    </div>\n    <input ref=\"fileInput\" type=\"file\" :name=\"name\" :id=\"id\" :accept=\"accept\" @change=\"onFileChange\">\n  </div>\n</template>\n\n<script>\nexport default {\n  name: 'picture-input',\n  props: {\n    width: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    height: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    margin: {\n      type: [String, Number],\n      default: 0\n    },\n    accept: {\n      type: String,\n      default: 'image/*'\n    },\n    size: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    name: {\n      type: String,\n      default: null\n    },\n    id: {\n      type: [String, Number],\n      default: null\n    },\n    buttonClass: {\n      type: String,\n      default: 'btn btn-primary button'\n    },\n    removeButtonClass: {\n      type: String,\n      default: 'btn btn-secondary button secondary'\n    },\n    aspectButtonClass: {\n      type: String,\n      default: 'btn btn-secondary button secondary'\n    },\n    prefill: {\n      type: [String, File],\n      default: ''\n    },\n    prefillOptions: {\n      type: Object,\n      default: () => {\n        return {}\n      }\n    },\n    crop: {\n      type: Boolean,\n      default: true\n    },\n    radius: {\n      type: [String, Number],\n      default: 0\n    },\n    removable: {\n      type: Boolean,\n      default: false\n    },\n    hideChangeButton: {\n      type: Boolean,\n      default: false\n    },\n    autoToggleAspectRatio: {\n      type: Boolean,\n      default: false\n    },\n    toggleAspectRatio: {\n      type: Boolean,\n      default: false\n    },\n    changeOnClick: {\n      type: Boolean,\n      default: true\n    },\n    plain: {\n      type: Boolean,\n      default: false\n    },\n    zIndex: {\n      type: Number,\n      default: 10000\n    },\n    alertOnError: {\n      type: Boolean,\n      default: true\n    },\n    customStrings: {\n      type: Object,\n      default: () => {\n        return {}\n      }\n    }\n  },\n  watch: {\n    prefill () {\n      if (this.prefill) {\n        this.preloadImage(this.prefill, this.prefillOptions)\n      } else {\n        this.removeImage()\n      }\n    }\n  },\n  data () {\n    return {\n      imageSelected: false,\n      previewHeight: 0,\n      previewWidth: 0,\n      draggingOver: false,\n      canvasWidth: 0,\n      canvasHeight: 0,\n      strings: {\n        upload: '<p>Your device does not support file uploading.</p>',\n        drag: 'Drag an image or <br>click here to select a file',\n        tap: 'Tap here to select a photo <br>from your gallery',\n        change: 'Change Photo',\n        aspect: 'Landscape/Portrait',\n        remove: 'Remove Photo',\n        select: 'Select a Photo',\n        selected: '<p>Photo successfully selected!</p>',\n        fileSize: 'The file size exceeds the limit',\n        fileType: 'This file type is not supported.'\n      }\n    }\n  },\n  mounted () {\n    this.updateStrings()\n    if (this.prefill) {\n      this.preloadImage(this.prefill, this.prefillOptions)\n    }\n\n    this.$nextTick(() => {\n      window.addEventListener('resize', this.onResize)\n      this.onResize()\n    })\n    if (this.supportsPreview) {\n      this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)\n      const canvas = this.$refs.previewCanvas\n      if (canvas.getContext) {\n        this.context = canvas.getContext('2d')\n        this.context.scale(this.pixelRatio, this.pixelRatio)\n      }\n    }\n    if (this.accept !== 'image/*') {\n      this.fileTypes = this.accept.split(',')\n      this.fileTypes = this.fileTypes.map(s => s.trim())\n    }\n\n    this.canvasWidth = this.width\n    this.canvasHeight = this.height\n\n    this.$on('error', this.onError)\n  },\n  beforeDestroy () {\n    window.removeEventListener('resize', this.onResize)\n    this.$off('error', this.onError)\n  },\n  methods: {\n    updateStrings () {\n      for (let s in this.customStrings) {\n        if (s in this.strings && typeof this.customStrings[s] === 'string') {\n          this.strings[s] = this.customStrings[s]\n        }\n      }\n    },\n    onClick () {\n      if (!this.imageSelected) {\n        this.selectImage()\n        return\n      }\n\n      if (this.changeOnClick) {\n        this.selectImage()\n      }\n\n      this.$emit('click')\n    },\n    onResize () {\n      this.resizeCanvas()\n\n      if (this.imageObject) {\n        this.drawImage(this.imageObject)\n      }\n    },\n    onDragStart () {\n      if (!this.supportsDragAndDrop) {\n        return\n      }\n      this.draggingOver = true\n    },\n    onDragStop () {\n      if (!this.supportsDragAndDrop) {\n        return\n      }\n      this.draggingOver = false\n    },\n    onFileDrop (e) {\n      this.onDragStop()\n      this.onFileChange(e)\n    },\n    onFileChange (e, prefill) {\n      let files = e.target.files || e.dataTransfer.files\n      if (!files.length) {\n        return\n      }\n      if (files[0].size <= 0 || files[0].size > this.size * 1024 * 1024) {\n        this.$emit('error', {\n          type: 'fileSize',\n          fileSize: files[0].size,\n          fileType: files[0].type,\n          fileName: files[0].name,\n          message: this.strings.fileSize + ' (' + this.size + 'MB)'\n        })\n        return\n      }\n      if (files[0].name === this.fileName && files[0].size === this.fileSize && this.fileModified === files[0].lastModified) {\n        return\n      }\n\n      this.file = files[0]\n      this.fileName = files[0].name\n      this.fileSize = files[0].size\n      this.fileModified = files[0].lastModified\n      this.fileType = files[0].type\n\n      if (this.accept === 'image/*') {\n        if (files[0].type.substr(0, 6) !== 'image/') {\n          return\n        }\n      } else {\n        if (this.fileTypes.indexOf(files[0].type) === -1) {\n          this.$emit('error', {\n            type: 'fileType',\n            fileSize: files[0].size,\n            fileType: files[0].type,\n            fileName: files[0].name,\n            message: this.strings.fileType\n          })\n          return\n        }\n      }\n      this.imageSelected = true\n      this.image = ''\n      if (this.supportsPreview) {\n        this.loadImage(files[0], prefill || false)\n      } else {\n        if (prefill) {\n          this.$emit('prefill')\n        } else {\n          this.$emit('change', this.image)\n        }\n      }\n    },\n    onError (error) {\n      if (this.alertOnError) {\n        alert(error.message)\n      }\n    },\n    loadImage (file, prefill) {\n      this.getEXIFOrientation(file, orientation => {\n        this.setOrientation(orientation)\n        let reader = new FileReader()\n        reader.onload = e => {\n          this.image = e.target.result\n          if (prefill) {\n            this.$emit('prefill')\n          } else {\n            this.$emit('change', this.image)\n          }\n          this.imageObject = new Image()\n          this.imageObject.onload = () => {\n            if (this.autoToggleAspectRatio) {\n              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)\n              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height)\n              if (canvasOrientation !== imageOrientation) {\n                this.rotateCanvas()\n              }\n            }\n            this.drawImage(this.imageObject)\n          }\n          this.imageObject.src = this.image\n        }\n        reader.readAsDataURL(file)\n      })\n    },\n    drawImage (image) {\n      this.imageWidth = image.width\n      this.imageHeight = image.height\n      this.imageRatio = image.width / image.height\n      let offsetX = 0\n      let offsetY = 0\n      let scaledWidth = this.previewWidth\n      let scaledHeight = this.previewHeight\n      const previewRatio = this.previewWidth / this.previewHeight\n      if (this.crop) {\n        if (this.imageRatio >= previewRatio) {\n          scaledWidth = scaledHeight * this.imageRatio\n          offsetX = (this.previewWidth - scaledWidth) / 2\n        } else {\n          scaledHeight = scaledWidth / this.imageRatio\n          offsetY = (this.previewHeight - scaledHeight) / 2\n        }\n      } else {\n        if (this.imageRatio >= previewRatio) {\n          scaledHeight = scaledWidth / this.imageRatio\n          offsetY = (this.previewHeight - scaledHeight) / 2\n        } else {\n          scaledWidth = scaledHeight * this.imageRatio\n          offsetX = (this.previewWidth - scaledWidth) / 2\n        }\n      }\n      const canvas = this.$refs.previewCanvas\n      canvas.style.background = 'none'\n      canvas.width = this.previewWidth * this.pixelRatio\n      canvas.height = this.previewHeight * this.pixelRatio\n      this.context.setTransform(1, 0, 0, 1, 0, 0)\n      this.context.clearRect(0, 0, canvas.width, canvas.height)\n      if (this.rotate) {\n        this.context.translate(offsetX * this.pixelRatio, offsetY * this.pixelRatio)\n        this.context.translate(scaledWidth / 2 * this.pixelRatio, scaledHeight / 2 * this.pixelRatio)\n        this.context.rotate(this.rotate)\n        offsetX = -scaledWidth / 2\n        offsetY = -scaledHeight / 2\n      }\n      this.context.drawImage(image,\n        offsetX * this.pixelRatio,\n        offsetY * this.pixelRatio,\n        scaledWidth * this.pixelRatio,\n        scaledHeight * this.pixelRatio)\n    },\n    selectImage () {\n      this.$refs.fileInput.click()\n    },\n    removeImage () {\n      this.$refs.fileInput.value = ''\n      this.$refs.fileInput.type = ''\n      this.$refs.fileInput.type = 'file'\n      this.fileName = ''\n      this.fileType = ''\n      this.fileSize = 0\n      this.fileModified = 0\n      this.imageSelected = false\n      this.image = ''\n      this.file = null\n      this.imageObject = null\n      this.$refs.previewCanvas.style.backgroundColor = 'rgba(200,200,200,.25)'\n      this.$refs.previewCanvas.width = this.previewWidth * this.pixelRatio\n      this.$emit('remove')\n    },\n    rotateImage () {\n      this.rotateCanvas()\n\n      if (this.imageObject) {\n        this.drawImage(this.imageObject)\n      }\n\n      let newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)\n      this.$emit('aspectratiochange', newOrientation)\n    },\n    resizeCanvas () {\n      let previewRatio = this.canvasWidth / this.canvasHeight\n      let newWidth = this.$refs.container.clientWidth\n      if (!this.toggleAspectRatio && newWidth === this.containerWidth) {\n        return\n      }\n      this.containerWidth = newWidth\n      this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth)\n      this.previewHeight = this.previewWidth / previewRatio\n    },\n    getOrientation (width, height) {\n      let orientation = 'square'\n\n      if (width > height) {\n        orientation = 'landscape'\n      } else if (width < height) {\n        orientation = 'portrait'\n      }\n\n      return orientation\n    },\n    switchCanvasOrientation () {\n      const canvasWidth = this.canvasWidth\n      const canvasHeight = this.canvasHeight\n\n      this.canvasWidth = canvasHeight\n      this.canvasHeight = canvasWidth\n    },\n    rotateCanvas () {\n      this.switchCanvasOrientation()\n      this.resizeCanvas()\n    },\n    setOrientation (orientation) {\n      this.rotate = false\n      if (orientation === 8) {\n        this.rotate = -Math.PI / 2\n      } else if (orientation === 6) {\n        this.rotate = Math.PI / 2\n      } else if (orientation === 3) {\n        this.rotate = -Math.PI\n      }\n    },\n    getEXIFOrientation (file, callback) {\n      var reader = new FileReader()\n      reader.onload = e => {\n        var view = new DataView(e.target.result)\n        if (view.getUint16(0, false) !== 0xFFD8) {\n          return callback(-2)\n        }\n        var length = view.byteLength\n        var offset = 2\n        while (offset < length) {\n          var marker = view.getUint16(offset, false)\n          offset += 2\n          if (marker === 0xFFE1) {\n            if (view.getUint32(offset += 2, false) !== 0x45786966) {\n              return callback(-1)\n            }\n            var little = view.getUint16(offset += 6, false) === 0x4949\n            offset += view.getUint32(offset + 4, little)\n            var tags = view.getUint16(offset, little)\n            offset += 2\n            for (var i = 0; i < tags; i++) {\n              if (view.getUint16(offset + (i * 12), little) === 0x0112) {\n                return callback(view.getUint16(offset + (i * 12) + 8, little))\n              }\n            }\n          } else if ((marker & 0xFF00) !== 0xFF00) {\n            break\n          } else {\n            offset += view.getUint16(offset, false)\n          }\n        }\n        return callback(-1)\n      }\n      reader.readAsArrayBuffer(file.slice(0, 65536))\n    },\n    preloadImage (source, options) {\n      // ie 11 support\n      let File = window.File\n      try {\n        new File([], '') // eslint-disable-line\n      } catch (e) {\n        File = class File extends Blob {\n          constructor (chunks, filename, opts = {}) {\n            super(chunks, opts)\n            this.lastModifiedDate = new Date()\n            this.lastModified = +this.lastModifiedDate\n            this.name = filename\n          }\n        }\n      }\n      options = Object.assign({}, options)\n      if (typeof source === 'object') {\n        this.imageSelected = true\n        this.image = ''\n        if (this.supportsPreview) {\n          this.loadImage(source, true)\n        } else {\n          this.$emit('prefill')\n        }\n        return\n      }\n      let headers = new Headers()\n      headers.append('Accept', 'image/*')\n      fetch(source, {\n        method: 'GET',\n        mode: 'cors',\n        headers: headers\n      }).then(response => {\n        return response.blob()\n      })\n      .then(imageBlob => {\n        let e = { target: { files: [] } }\n        const fileName = options.fileName || source.split('/').slice(-1)[0]\n        let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0]))\n        mediaType = mediaType.replace('jpg', 'jpeg')\n        e.target.files[0] = new File([imageBlob], fileName, { type: mediaType })\n        this.onFileChange(e, true)\n      })\n      .catch(err => {\n        this.$emit('error', {\n          type: 'failedPrefill',\n          message: 'Failed loading prefill image: ' + err\n        })\n      })\n    }\n  },\n  computed: {\n    supportsUpload () {\n      if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\\/(1.0|2.0|2.5|3.0))/)) {\n        return false\n      }\n      const el = document.createElement('input')\n      el.type = 'file'\n      return !el.disabled\n    },\n    supportsPreview () {\n      return window.FileReader && !!window.CanvasRenderingContext2D\n    },\n    supportsDragAndDrop () {\n      const div = document.createElement('div')\n      return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)\n    },\n    computedClasses () {\n      const classObject = {}\n      classObject['dragging-over'] = this.draggingOver\n      return classObject\n    },\n    fontSize () {\n      return Math.min(0.04 * this.previewWidth, 21) + 'px'\n    }\n  }\n}\n</script>\n\n<style scoped>\n.picture-input {\n  width: 100%;\n  margin: 0 auto;\n  text-align: center;\n}\n.preview-container {\n  width: 100%;\n  box-sizing: border-box;\n  margin: 0 auto;\n  cursor: pointer;\n  overflow: hidden;\n}\n.picture-preview {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  z-index: 10001;\n  box-sizing: border-box;\n  background-color: rgba(200,200,200,.25);\n}\n.picture-preview.dragging-over {\n  filter: brightness(0.5);\n}\n.picture-inner {\n  position: relative;\n  z-index: 10002;\n  pointer-events: none;\n  box-sizing: border-box;\n  margin: 1em auto;\n  padding: 0.5em;\n  border: .3em dashed rgba(66,66,66,.15);\n  border-radius: 8px;\n  width: calc(100% - 2.5em);\n  height: calc(100% - 2.5em);\n  display: table;\n}\n.picture-inner .picture-inner-text {\n  display: table-cell;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n  line-height: 1.5;\n}\nbutton {\n  margin: 1em .25em;\n  cursor: pointer;\n}\ninput[type=file] {\n  display: none;\n}\n</style>\n"]}, media: undefined });
-
-  };
-  /* scoped */
-  const __vue_scope_id__$a = "data-v-4ae4354e";
-  /* module identifier */
-  const __vue_module_identifier__$a = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$a = false;
-  /* style inject SSR */
-  
-
-  
-  var PictureInput = normalizeComponent_1(
-    { render: __vue_render__$a, staticRenderFns: __vue_staticRenderFns__$a },
-    __vue_inject_styles__$a,
-    __vue_script__$a,
-    __vue_scope_id__$a,
-    __vue_is_functional_template__$a,
-    __vue_module_identifier__$a,
-    browser,
-    undefined
-  );
-
-var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var defaults$3 = {
-  width: 200,
-  height: 200,
-  crop: false,
-  margin: 0,
-  radius: 0,
-  plain: false,
-  accept: 'image/*',
-  size: 5,
-  removable: false,
-  hideChangeButton: true,
-  buttonClass: 'btn btn-primary',
-  removeButtonClass: 'btn btn-secondary',
-  zIndex: 1000,
-  alertOnError: true,
-  customStrings: {
-    upload: '<p>当前浏览器不支持图片上传功能.</p>',
-    drag: '拖拽图片 或者 <br>点击选择文件',
-    tap: 'Tap here to select a photo <br>from your gallery',
-    change: '更改',
-    remove: '删除',
-    select: '选择',
-    selected: '<p>选择成功</p>',
-    fileSize: '文件大小超过限制',
-    fileType: '不支持的文件类型',
-    aspect: 'Landscape/Portrait'
-  }
-};
-
-var script$b = {
-  data: function data() {
-    return {
-      initializeValue: ''
-    };
-  },
-
-  computed: {
-    config: function config() {
-      return _extend_3_0_2_extend(true, {}, defaults$3, this.definition.config);
-    }
-  },
-  created: function created() {
-    var _this = this;
-
-    this.initialize = true;
-
-    this.$watch('value', function (newValue) {
-      // if (this.initialize) {
-      console.log(11111, newValue);
-      _this.initializeValue = newValue;
-      _this.initialize = false;
-      // }
-    }, {
-      immediate: true
-    });
-  },
-
-  methods: _extends$1({
-    onChange: function onChange(image) {
-      var _this2 = this;
-
-      var config = this.config;
-
-
-      if (image) {
-        if (config.action) {
-          config.action(image, config.directory).then(function (uri) {
-            if (uri) {
-              _this2.value = uri;
-            }
-          }).catch(function (err) {
-            console.error(err);
-          });
-        } else {
-          this.uploadImage(image, config.directory).then(function (uri) {
-            if (uri) {
-              _this2.value = uri;
-            }
-          }).catch(function (err) {
-            console.error(err);
-          });
-        }
-      }
-    }
-  }, mapActions(['uploadImage'])),
-  mixins: [basicMixin],
-  components: {
-    PictureInput: PictureInput
-  }
-};
-
-/* script */
-var __vue_script__$b = script$b;
-
-/* template */
-var __vue_render__$b = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "image-upload" }, [_c("picture-input", {
-    ref: "upload",
-    attrs: {
-      width: _vm.config.width,
-      height: _vm.config.height,
-      margin: _vm.config.margin,
-      crop: _vm.config.crop,
-      radius: _vm.config.radius,
-      plain: _vm.config.plain,
-      accept: _vm.config.accept,
-      size: _vm.config.size,
-      removable: _vm.config.removable,
-      hideChangeButton: _vm.config.hideChangeButton,
-      buttonClass: _vm.config.buttonClass,
-      removeButtonClass: _vm.config.removeButtonClass,
-      zIndex: _vm.config.zIndex,
-      prefill: _vm.initializeValue,
-      alertOnError: _vm.config.alertOnError,
-      customStrings: _vm.config.customStrings
-    },
-    on: { change: _vm.onChange }
-  }), _vm._v(" "), _c("span", { staticClass: "value" }, [_vm._v(_vm._s(_vm.value))])], 1);
-};
-var __vue_staticRenderFns__$b = [];
-__vue_render__$b._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$b = undefined;
-/* scoped */
-var __vue_scope_id__$b = undefined;
-/* module identifier */
-var __vue_module_identifier__$b = undefined;
-/* functional template */
-var __vue_is_functional_template__$b = false;
-/* style inject */
-
-/* style inject SSR */
-
-var ImageUpload = normalizeComponent_1({ render: __vue_render__$b, staticRenderFns: __vue_staticRenderFns__$b }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$b, undefined, undefined);
-
-var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var DEFAULT_VALID = {
-  status: 0,
-  message: ''
-};
-
-var script$c = {
-  props: {
-    definition: {
-      type: Object,
-      required: true
-    },
-    index: {
-      type: Number,
-      default: -1
-    }
-  },
-  computed: _extends$2({}, mapState({
-    messages: function messages(state) {
-      return state.messages;
-    }
-  }), mapGetters(['getSchema']), {
-    valid: function valid() {
-      return _$2.get(this.messages, this.path.join('.')) || DEFAULT_VALID;
-    },
-    description: function description() {
-      return this.definition.description;
-    },
-    path: function path() {
-      // 根据实际坐标设置路径
-      var key = this.definition.key;
-
-      if (key) {
-        key = key.slice();
-
-        // 先替换父级的path,取父级路径
-        var parentPath = this.$parent.$parent.path;
-
-        if (parentPath) {
-          var len = parentPath.length;
-          var keyLen = key.length;
-
-          if (len < keyLen) {
-            key.splice(0, len);
-            key = parentPath.slice(0, len).concat(key);
-          }
-        }
-
-        var idx = this.index;
-        // TODO: 这个传递index的方式有点牵强。
-        idx = idx !== -1 ? idx : this.$parent.$parent.index;
-
-        if (idx !== -1) {
-          var i = _$2.lastIndexOf(key, '$index');
-
-          if (i > -1) {
-            key.splice(i, 1, idx);
-          }
-        }
-
-        return key;
-      } else {
-        // 没有key就继承父级的path，保证往上层找肯定能找到path
-        return this.$parent.$parent.path || [];
-      }
-    },
-    name: function name() {
-      return this.path.join('-');
-    },
-    schema: function schema() {
-      return this.getSchema(this.definition.key);
-    }
-  }),
-  components: {
-    'v-text': vText,
-    'checkbox': Checkbox,
-    'checkboxes': Checkboxes,
-    'date': vDate,
-    'hidden': Hidden,
-    'v-html': vHtml,
-    'number': vNumber,
-    'v-select': vSelect,
-    'v-textarea': vTextArea,
-    'editor': Editor$1,
-    'image-upload': ImageUpload
-  }
-};
-
-/* script */
-var __vue_script__$c = script$c;
-
-/* template */
-var __vue_render__$c = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("div", {
-    staticClass: "form-group",
-    class: [_vm.name, _vm.valid.status === 1 ? "has-success" : _vm.valid.status === 2 ? "has-error" : ""]
-  }, [_vm.definition.title ? [_c("label", { staticClass: "col-sm-2 control-label" }, [_vm.definition.required ? _c("span", { staticClass: "required" }, [_vm._v("*")]) : _vm._e(), _vm._v("\n      " + _vm._s(_vm.definition.title) + ":\n    ")]), _vm._v(" "), _c("div", { staticClass: "col-sm-10" }, [_c(_vm.definition.type, {
-    tag: "component",
-    attrs: {
-      definition: _vm.definition,
-      path: _vm.path,
-      schema: _vm.schema
-    }
-  })], 1), _vm._v(" "), _c("div", { staticClass: "col-sm-offset-2 col-sm-10 form-tips" }, [_c("span", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.valid.status !== 2,
-      expression: "valid.status !== 2"
-    }]
-  }, [_vm._v(_vm._s(_vm.description))]), _vm._v(" "), _c("span", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.valid.status === 2,
-      expression: "valid.status === 2"
-    }]
-  }, [_vm._v(_vm._s(_vm.valid.message))])])] : [_c("div", { staticClass: "col-sm-12" }, [_c(_vm.definition.type, {
-    tag: "component",
-    attrs: {
-      definition: _vm.definition,
-      path: _vm.path,
-      schema: _vm.schema
-    }
-  })], 1), _vm._v(" "), _c("div", { staticClass: "col-sm-12 form-tips" }, [_c("span", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.valid.status !== 2,
-      expression: "valid.status !== 2"
-    }]
-  }, [_vm._v(_vm._s(_vm.description))]), _vm._v(" "), _c("span", {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: _vm.valid.status === 2,
-      expression: "valid.status === 2"
-    }]
-  }, [_vm._v(_vm._s(_vm.valid.message))])])]], 2);
-};
-var __vue_staticRenderFns__$c = [];
-__vue_render__$c._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$c = undefined;
-/* scoped */
-var __vue_scope_id__$c = undefined;
-/* module identifier */
-var __vue_module_identifier__$c = undefined;
-/* functional template */
-var __vue_is_functional_template__$c = false;
-/* style inject */
-
-/* style inject SSR */
-
-var FormGroup = normalizeComponent_1({ render: __vue_render__$c, staticRenderFns: __vue_staticRenderFns__$c }, __vue_inject_styles__$c, __vue_script__$c, __vue_scope_id__$c, __vue_is_functional_template__$c, __vue_module_identifier__$c, undefined, undefined);
-
-Vue.component('form-group', FormGroup);
-
-var objectMixin = {
-  props: {
-    definition: {
-      type: Object,
-      required: true
-    },
-    path: {
-      type: Array,
-      required: true
-    },
-    schema: {
-      type: Object,
-      required: true
-    }
-  }
-};
-
-//
-
-var script$d = {
-  mixins: [objectMixin]
-};
-
-/* script */
-var __vue_script__$d = script$d;
-
-/* template */
-var __vue_render__$d = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "fieldset" }, _vm._l(_vm.definition.items, function (group, idx) {
-    return _c("form-group", {
-      key: (group.key ? group.key.join(".") : "") + "-" + idx,
-      attrs: { definition: group }
-    });
-  }), 1);
-};
-var __vue_staticRenderFns__$d = [];
-__vue_render__$d._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$d = undefined;
-/* scoped */
-var __vue_scope_id__$d = undefined;
-/* module identifier */
-var __vue_module_identifier__$d = undefined;
-/* functional template */
-var __vue_is_functional_template__$d = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Fieldset = normalizeComponent_1({ render: __vue_render__$d, staticRenderFns: __vue_staticRenderFns__$d }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d, __vue_module_identifier__$d, undefined, undefined);
-
-Vue.component('v-fieldset', Fieldset);
-
-var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var arrayMixins = {
-  data: function data() {
-    return {
-      len: 0
-    };
-  },
-
-  props: {
-    definition: {
-      type: Object,
-      required: true
-    },
-    path: {
-      type: Array,
-      required: true
-    },
-    schema: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: _extends$3({}, mapState({
-    model: function model(state) {
-      return state.model;
-    }
-  }), {
-    list: {
-      get: function get() {
-        return _$2.get(this.model, this.path);
-      },
-      set: function set(value) {
-        this.setValue({ path: this.path, value: value });
-      }
-    },
-    minItems: function minItems() {
-      return this.schema.minItems || 0;
-    },
-    maxItems: function maxItems() {
-      return this.schema.maxItems || 100;
-    }
-  }),
-  watch: {
-    list: function list(newValue) {
-      this.len = newValue.length;
-    }
-  },
-  created: function created() {
-    var model = _$2.get(this.model, this.path);
-
-    this.len = model ? model.length : 0;
-  },
-
-  methods: _extends$3({}, mapMutations(['removeValue', 'setValue', 'exchanceItem']), {
-    remveItem: function remveItem(idx) {
-      if (this.len > this.minItems) {
-        this.len = this.len - 1;
-
-        this.removeValue(this.path.concat(idx));
-      } else {
-        /* global alert:true */
-        /* eslint no-undef: "error" */
-        alert('小于最小个数');
-      }
-    },
-    addItem: function addItem() {
-      if (this.len < this.maxItems) {
-        this.len = this.len + 1;
-      } else {
-        /* global alert:true */
-        /* eslint no-undef: "error" */
-        alert('大于最大个数');
-      }
-    },
-    upItem: function upItem(idx) {
-      this.exchanceItem({ path: this.path, newIndex: idx - 1, oldIndex: idx });
-    },
-    downItem: function downItem(idx) {
-      this.exchanceItem({ path: this.path, newIndex: idx, oldIndex: idx + 1 });
-    }
-  }),
-  components: {
-    draggable: draggable
-  }
-};
-
-//
-
-var script$e = {
-  mixins: [arrayMixins]
-};
-
-/* script */
-var __vue_script__$e = script$e;
-
-/* template */
-var __vue_render__$e = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _vm.definition.isFixed ? _c("ul", { staticClass: "list-group" }, [_vm._l(_vm.len, function (idx) {
-    return _c("li", {
-      key: idx - 1,
-      staticClass: "list-group-item drag-item",
-      attrs: { drop: "moveItem" }
-    }, [_vm._l(_vm.definition.items, function (group) {
-      return _c("form-group", {
-        key: (group.key ? group.key.join(".") : "") + "-" + (idx - 1),
-        attrs: { definition: group, index: idx - 1 }
-      });
-    }), _vm._v(" "), !_vm.definition.isFixed ? _c("span", {
-      staticClass: "glyphicon glyphicon-remove",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.remveItem(idx - 1);
-        }
-      }
-    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== 1 ? _c("span", {
-      staticClass: "glyphicon glyphicon-chevron-up",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.upItem(idx - 1);
-        }
-      }
-    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== _vm.len ? _c("span", {
-      staticClass: "glyphicon glyphicon-chevron-down",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.downItem(idx - 1);
-        }
-      }
-    }) : _vm._e()], 2);
-  }), _vm._v(" "), _c("li", {
-    staticClass: "list-group-item text-right",
-    attrs: { slot: "footer" },
-    slot: "footer"
-  }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: { type: "button" },
-    on: { click: _vm.addItem }
-  }, [_vm._v("添加")])])], 2) : _c("draggable", {
-    staticClass: "list-group",
-    attrs: { tag: "ul", draggable: ".drag-item" },
-    model: {
-      value: _vm.list,
-      callback: function callback($$v) {
-        _vm.list = $$v;
-      },
-      expression: "list"
-    }
-  }, [_vm._l(_vm.len, function (idx) {
-    return _c("li", {
-      key: idx - 1,
-      staticClass: "list-group-item drag-item",
-      attrs: { drop: "moveItem" }
-    }, [_vm._l(_vm.definition.items, function (group) {
-      return _c("form-group", {
-        key: (group.key ? group.key.join(".") : "") + "-" + (idx - 1),
-        attrs: { definition: group, index: idx - 1 }
-      });
-    }), _vm._v(" "), !_vm.definition.isFixed ? _c("span", {
-      staticClass: "glyphicon glyphicon-remove",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.remveItem(idx - 1);
-        }
-      }
-    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== 1 ? _c("span", {
-      staticClass: "glyphicon glyphicon-chevron-up",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.upItem(idx - 1);
-        }
-      }
-    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== _vm.len ? _c("span", {
-      staticClass: "glyphicon glyphicon-chevron-down",
-      attrs: { type: "button" },
-      on: {
-        click: function click($event) {
-          return _vm.downItem(idx - 1);
-        }
-      }
-    }) : _vm._e()], 2);
-  }), _vm._v(" "), _c("li", {
-    staticClass: "list-group-item text-right",
-    attrs: { slot: "footer" },
-    slot: "footer"
-  }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: { type: "button" },
-    on: { click: _vm.addItem }
-  }, [_vm._v("添加")])])], 2);
-};
-var __vue_staticRenderFns__$e = [];
-__vue_render__$e._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$e = undefined;
-/* scoped */
-var __vue_scope_id__$e = undefined;
-/* module identifier */
-var __vue_module_identifier__$e = undefined;
-/* functional template */
-var __vue_is_functional_template__$e = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Array$1 = normalizeComponent_1({ render: __vue_render__$e, staticRenderFns: __vue_staticRenderFns__$e }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e, __vue_module_identifier__$e, undefined, undefined);
-
-Vue.component('array', Array$1);
-
-//
-
-var script$f = {
-  mixins: [objectMixin]
-};
-
-/* script */
-var __vue_script__$f = script$f;
-
-/* template */
-var __vue_render__$f = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "row" }, _vm._l(_vm.definition.items, function (group, idx) {
-    return _c("div", {
-      key: (group.key ? group.key.join(".") : "") + "-" + idx,
-      class: ["col-xs-" + group.col]
-    }, [_c("form-group", { attrs: { definition: group } })], 1);
-  }), 0);
-};
-var __vue_staticRenderFns__$f = [];
-__vue_render__$f._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$f = undefined;
-/* scoped */
-var __vue_scope_id__$f = undefined;
-/* module identifier */
-var __vue_module_identifier__$f = undefined;
-/* functional template */
-var __vue_is_functional_template__$f = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Inline = normalizeComponent_1({ render: __vue_render__$f, staticRenderFns: __vue_staticRenderFns__$f }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f, __vue_module_identifier__$f, undefined, undefined);
-
-Vue.component('inline', Inline);
-
-//
-
-var script$g = {
-  computed: mapState({
-    definition: function definition(state) {
-      return state.definition;
-    }
-  })
-};
-
-/* script */
-var __vue_script__$g = script$g;
-
-/* template */
-var __vue_render__$g = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("form", {
-    staticClass: "form-horizontal",
-    on: {
-      submit: function submit($event) {
-        $event.preventDefault();
-      }
-    }
-  }, _vm._l(_vm.definition, function (group, idx) {
-    return _c("form-group", {
-      key: (group.key ? group.key.join(".") : "") + "-" + idx,
-      attrs: { definition: group }
-    });
-  }), 1);
-};
-var __vue_staticRenderFns__$g = [];
-__vue_render__$g._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$g = undefined;
-/* scoped */
-var __vue_scope_id__$g = undefined;
-/* module identifier */
-var __vue_module_identifier__$g = undefined;
-/* functional template */
-var __vue_is_functional_template__$g = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Horizontal = normalizeComponent_1({ render: __vue_render__$g, staticRenderFns: __vue_staticRenderFns__$g }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g, __vue_module_identifier__$g, undefined, undefined);
-
-var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var script$h = {
-  props: {
-    schema: {
-      type: Object,
-      required: true
-    },
-    definition: {
-      type: Array
-    },
-    model: [Object, Array],
-    theme: {
-      type: String,
-      default: 'bootstrap'
-    }
-  },
-  created: function created() {
-    var schema = this.schema,
-        definition = this.definition,
-        model = this.model;
-
-
-    this.init({ schema: schema, definition: definition, model: model });
-  },
-  components: {
-    'bootstrap': Horizontal
-  },
-  methods: _extends$4({}, mapMutations(['init']))
-};
-
-/* script */
-var __vue_script__$h = script$h;
-
-/* template */
-var __vue_render__$h = function __vue_render__() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "vue-form" }, [_c(_vm.theme, { tag: "component" }), _vm._v(" "), _vm._t("default")], 2);
-};
-var __vue_staticRenderFns__$h = [];
-__vue_render__$h._withStripped = true;
-
-/* style */
-var __vue_inject_styles__$h = undefined;
-/* scoped */
-var __vue_scope_id__$h = undefined;
-/* module identifier */
-var __vue_module_identifier__$h = undefined;
-/* functional template */
-var __vue_is_functional_template__$h = false;
-/* style inject */
-
-/* style inject SSR */
-
-var VueForm = normalizeComponent_1({ render: __vue_render__$h, staticRenderFns: __vue_staticRenderFns__$h }, __vue_inject_styles__$h, __vue_script__$h, __vue_scope_id__$h, __vue_is_functional_template__$h, __vue_module_identifier__$h, undefined, undefined);
-
-var ObjectPath = createCommonjsModule(function (module, exports) {
-!function(undefined$1) {
-	var r = {
-		'\'': /\\\'/g,
-		'"': /\\\"/g,
-	};
-
-	var ObjectPath = {
-		parse: function(str){
-			if(typeof str !== 'string'){
-				throw new TypeError('ObjectPath.parse must be passed a string');
-			}
-
-			var i = 0;
-			var parts = [];
-			var d, b, q, c;
-			while (i < str.length){
-				d = str.indexOf('.', i);
-				b = str.indexOf('[', i);
-
-				// we've reached the end
-				if (d === -1 && b === -1){
-					parts.push(str.slice(i, str.length));
-					i = str.length;
-				}
-
-				// dots
-				else if (b === -1 || (d !== -1 && d < b)) {
-					parts.push(str.slice(i, d));
-					i = d + 1;
-				}
-
-				// brackets
-				else {
-					if (b > i){
-						parts.push(str.slice(i, b));
-						i = b;
-					}
-					q = str.slice(b+1, b+2);
-					if (q !== '"' && q !=='\'') {
-						c = str.indexOf(']', b);
-						if (c === -1) c = str.length;
-						parts.push(str.slice(i + 1, c));
-						i = (str.slice(c + 1, c + 2) === '.') ? c + 2 : c + 1;
-					} else {
-						c = str.indexOf(q+']', b);
-						if (c === -1) c = str.length;
-						while (str.slice(c - 1, c) === '\\' && b < str.length){
-							b++;
-							c = str.indexOf(q+']', b);
-						}
-						parts.push(str.slice(i + 2, c).replace(r[q], q));
-						i = (str.slice(c + 2, c + 3) === '.') ? c + 3 : c + 2;
-					}
-				}
-			}
-			return parts;
-		},
-
-		// root === true : auto calculate root; must be dot-notation friendly
-		// root String : the string to use as root
-		stringify: function(arr, quote){
-
-			if(!Array.isArray(arr))
-				arr = [arr.toString()];
-
-			quote = quote === '"' ? '"' : '\'';
-
-			return arr.map(function(n){ return '[' + quote + (n.toString()).replace(new RegExp(quote, 'g'), '\\' + quote) + quote + ']'; }).join('');
-		},
-
-		normalize: function(data, quote){
-			return ObjectPath.stringify(Array.isArray(data) ? data : ObjectPath.parse(data), quote);
-		},
-
-		// Angular
-		registerModule: function(angular) {
-			angular.module('ObjectPath', []).provider('ObjectPath', function(){
-				this.parse = ObjectPath.parse;
-				this.stringify = ObjectPath.stringify;
-				this.normalize = ObjectPath.normalize;
-				this.$get = function(){
-					return ObjectPath;
-				};
-			});
-		}
-	};
-
-	// AMD
-	if (typeof undefined$1 === 'function' && undefined$1.amd) {
-		undefined$1(function() {
-			return {
-				
-				// this is only namespaced for backwards compatibility when fixing issue #8
-				ObjectPath: ObjectPath,
-				
-				// export these as top-level functions
-				parse: ObjectPath.parse,
-				stringify: ObjectPath.stringify,
-				normalize: ObjectPath.normalize
-			};
-		});
-	}
-
-	// CommonJS
-	else {
-		exports.ObjectPath = ObjectPath;
-	}
-	
-}();
-});
-var ObjectPath_1 = ObjectPath.ObjectPath;
-
-var _objectpath_1_2_2_objectpath = ObjectPath.ObjectPath;
-
-var rule = {
-  boolean: ['checkbox'],
-  object: ['fieldset'],
-  array: ['checkboxes', 'array'],
-  number: ['number'],
-  integer: ['number'],
-  string: ['date', 'image', 'select', 'text']
-};
-
-function defaultRule (name, schema, options) {
-  var def = {
-    key: options.path
-  };
-
-  def.title = typeof schema.title !== 'undefined' ? schema.title : name;
-
-  if (schema.description) {
-    def.description = schema.description;
-  }
-
-  if (options.required) {
-    def.required = true;
-  }
-
-  if (options.col) {
-    def.col = options.col;
-  }
-
-  // def.schema = schema
-
-  options.lookup[_objectpath_1_2_2_objectpath.stringify(options.path)] = def;
-
-  return def;
-}
-
-function arrayRule (def, schema, options) {
-  var type = schema.type;
-
-  delete options.parentType;
-  delete options.col;
-
-  if (type === 'array') {
-    def.type = 'array';
-    def.items = [];
-
-    var path = options.path.slice();
-
-    // 用$index来代替[]，$index作为数组坐标，可替换真实坐标
-    path.push('$index');
-    this._parse('', schema.items, def.items, {
-      path: path,
-      lookup: options.lookup,
-      parentType: 'array'
-    });
-  }
-}
-
-function checkboxRule (def, schema) {
-  var type = schema.type;
-
-  if (type === 'boolean') {
-    schema.default = false;
-    def.type = 'checkbox';
-  }
-}
-
 // import ojectpath from 'objectpath'
 
 var enumToOptions = function enumToOptions(enm) {
@@ -3130,342 +1258,6 @@ var parseErrors = function parseErrors(errors) {
 
   return map;
 };
-
-function checkboxesRule (def, schema) {
-  var type = schema.type;
-
-  if (type === 'array' && schema.items && schema.items['enum']) {
-    def.type = 'checkboxes';
-    def.options = enumToOptions(schema.items['enum']);
-    // schema.default = []
-
-    if (def.required && !schema.minItems) {
-      schema.minItems = 1;
-    }
-  }
-}
-
-var DATE_TYPE_ENUM = 'date,date-time,time';
-
-function dateRule (def, schema) {
-  var type = schema.type;
-  var format = schema.format;
-
-  if (type === 'string' && format && DATE_TYPE_ENUM.indexOf(format) > -1) {
-    def.type = 'date';
-    // schema.default = ''
-  }
-}
-
-var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function fieldsetRule (def, schema, options) {
-  var _this = this;
-
-  var type = schema.type;
-  var parentType = options.parentType;
-  delete options.parentType;
-  delete options.col;
-
-  if (type === 'object') {
-    if (parentType && parentType === 'array') {
-      var size = _$2.size(schema.properties);
-      var itemType = size > 4 ? 'v-fieldset' : 'inline';
-
-      def.type = itemType;
-
-      if (itemType === 'inline') {
-        options.col = Math.floor(12 / size);
-      }
-    } else {
-      def.type = 'v-fieldset';
-    }
-
-    def.items = [];
-
-    _$2.each(schema.properties, function (val, key) {
-      if (/\./.test(key)) {
-        key = [key];
-      }
-
-      var path = options.path.slice();
-      path.push(key);
-
-      var required = schema.required && _$2.indexOf(schema.required, key) !== -1;
-
-      _this._parse(key, val, def.items, _extends$5({}, options, {
-        path: path,
-        required: required,
-        lookup: options.lookup
-      }));
-    });
-  }
-}
-
-function numberRule (def, schema) {
-  var type = schema.type;
-
-  if (type === 'number') {
-    def.type = 'number';
-  }
-}
-
-function selectRule (def, schema) {
-  var type = schema.type;
-
-  if (type === 'string' && schema['enum']) {
-    def.type = 'v-select';
-    def.options = enumToOptions(schema['enum']);
-  }
-}
-
-function textRule (def, schema) {
-  var type = schema.type;
-
-  if (type === 'string') {
-    def.type = 'v-text';
-  }
-}
-
-function imageUploadRule (def, schema) {
-  var type = schema.type;
-  var format = schema.format;
-
-  if (type === 'string' && format && format === 'image') {
-    def.type = 'image-upload';
-    // schema.default = ''
-  }
-}
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var rulesMap = {
-  checkbox: checkboxRule,
-  fieldset: fieldsetRule,
-  checkboxes: checkboxesRule,
-  array: arrayRule,
-  number: numberRule,
-  date: dateRule,
-  select: selectRule,
-  text: textRule,
-  image: imageUploadRule
-};
-
-var BUILD_IN_TYPE = ['text', 'select', 'textarea', 'html', 'grid', 'fieldset'];
-
-var Generator = function () {
-  function Generator() {
-    _classCallCheck(this, Generator);
-
-    this.rules = {};
-    this.init();
-  }
-
-  _createClass(Generator, [{
-    key: 'init',
-    value: function init() {
-      var rules = {};
-
-      _$2.each(rule, function (list, type) {
-        rules[type] = list.map(function (item) {
-          return rulesMap[item];
-        });
-      });
-
-      this.rules = rules;
-    }
-
-    /**
-     * 给指定类型添加规则
-     * @param {String} type data type
-     * @param {Function} rule 规则
-     * @param {Number} idx 添加位置，不提供则是添加到第一位
-     */
-
-  }, {
-    key: 'addRule',
-    value: function addRule(type, rule) {
-      var idx = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-      var rules = this.rules[type];
-
-      if (!rules) {
-        throw new Error('\u4E0D\u652F\u6301\u7684\u7C7B\u578B: ' + type);
-      }
-
-      rules.splice(idx, 0, rule);
-    }
-
-    /**
-     * 生成表单模型
-     * @param {Object} schema 
-     * @param {Array} definition 
-     */
-
-  }, {
-    key: 'parse',
-    value: function parse(schema) {
-      var _this = this;
-
-      var definition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-      if (!schema && schema.properties) {
-        throw new Error('schema no validate!');
-      }
-
-      var options = { path: [], lookup: {} };
-      var schemaForm = [];
-
-      _$2.each(schema.properties, function (val, key) {
-        var required = schema.required && _$2.indexOf(schema.required, key) !== -1;
-
-        _this._parse(key, val, schemaForm, {
-          path: [key],
-          required: required,
-          lookup: options.lookup
-        });
-      });
-
-      // 再根据form definition合并form schema
-      if (definition.length) {
-        definition = combine(definition, schemaForm, options.lookup);
-      } else {
-        definition = schemaForm;
-      }
-
-      return definition;
-    }
-
-    /**
-     * 生成表单模型
-     * @param {Object} schema 
-     * @param {Array} definition 
-     */
-
-  }, {
-    key: '_parse',
-    value: function _parse(name, schema, definition, options) {
-      var rules = this.rules[schema.type];
-      var def = void 0;
-
-      if (rules) {
-        def = defaultRule(name, schema, options);
-
-        for (var i = 0, len = rules.length; i < len; i++) {
-          rules[i].call(this, def, schema, options);
-
-          if (def.type) {
-            break;
-          }
-        }
-      }
-
-      definition.push(def);
-    }
-  }, {
-    key: 'getDefaultModal',
-    value: function getDefaultModal(schema) {
-      var model = {};
-
-      _$2.each(schema.properties, function (val, key) {
-        defaultValue(val, key, model);
-      });
-
-      return model;
-    }
-  }]);
-
-  return Generator;
-}();
-
-function defaultValue(schema, key, model) {
-  var type = schema.type;
-
-  if (type === 'object') {
-    model[key] = {};
-
-    _$2.each(schema.properties, function (val, _key) {
-      defaultValue(val, _key, model[key]);
-    });
-  } else if (type === 'array') {
-    model[key] = [];
-    defaultValue(schema.items, 0, model[key]);
-  } else {
-    if (schema.default) {
-      model[key] = schema.default;
-    }
-  }
-}
-
-// 合并form definition & schemaForm
-function combine(form, schemaForm, lookup) {
-  var idx = _$2.indexOf(form, '*');
-
-  // 用schema生成的默认定义
-  if (idx === 0) {
-    return schemaForm;
-  }
-
-  // Important: 存在*就意味着使用schema生成的默认定义，只是在前后做一定的扩展，如果此时存在同名定义，就会存在两个定义。
-  if (idx !== -1) {
-    form = form.slice(0, idx).concat(schemaForm).concat(form.slice(idx + 1));
-
-    return form;
-  }
-
-  var definition = [];
-
-  _$2.each(form, function (obj) {
-    if (typeof obj === 'string') {
-      obj = {
-        key: obj
-      };
-    }
-
-    if (obj.key && typeof obj.key === 'string') {
-      obj.key = obj.key.replace(/\[\]/g, '.$index');
-      obj.key = _objectpath_1_2_2_objectpath.parse(obj.key);
-    }
-
-    // if (def.options) {
-    //   def.options = formatOptions(obj.options)
-    // }
-    var def = void 0;
-
-    // extend with schema form from schema
-    if (obj.key) {
-      var path = _objectpath_1_2_2_objectpath.stringify(obj.key);
-      def = lookup[path];
-
-      if (def) {
-        _$2.each(def, function (val, key) {
-          if (typeof obj[key] === 'undefined') {
-            obj[key] = val;
-          }
-        });
-      }
-    }
-
-    // 保留html,添加v-前缀
-    if (_$2.indexOf(BUILD_IN_TYPE, obj.type) > -1) {
-      obj.type = 'v-' + obj.type;
-    }
-
-    if (obj.items) {
-      if (def) {
-        obj.items = combine(obj.items, def.items, lookup);
-      } else {
-        obj.items = combine(obj.items, schemaForm, lookup);
-      }
-    }
-
-    definition.push(obj);
-  });
-
-  return definition;
-}
 
 var uri_all = createCommonjsModule(function (module, exports) {
 /** @license URI.js v4.2.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
@@ -10655,7 +8447,7 @@ var _ajvErrors_1_0_1_ajvErrors = function (ajv, options) {
   return ajv;
 };
 
-var defaults$4 = {
+var defaults$2 = {
   $data: true,
   removeAdditional: true,
   useDefaults: false,
@@ -10674,7 +8466,7 @@ var defaults$4 = {
 function Ajv$1 () {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  var config = Object.assign({}, defaults$4, options);
+  var config = Object.assign({}, defaults$2, options);
   var ajv$1 = new ajv(config);
   _ajvErrors_1_0_1_ajvErrors(ajv$1);
 
@@ -10868,7 +8660,6 @@ function localize() {
   }
 }
 
-var generator = new Generator();
 var ARRAY_ROOT_KEY = 'silentList';
 
 var init = function init(state, _ref) {
@@ -10876,6 +8667,8 @@ var init = function init(state, _ref) {
       definition = _ref.definition,
       _ref$model = _ref.model,
       model = _ref$model === undefined ? {} : _ref$model;
+
+  var generator = state.generator;
 
   // 根节点是array，要嵌套一层
   if (schema.type === 'array') {
@@ -10910,7 +8703,7 @@ var init = function init(state, _ref) {
 
     state.isRootArray = true;
   }
-
+  console.log(generator);
   state.definition = generator.parse(schema, definition);
   state.schema = schema;
   state.validator = null;
@@ -11121,7 +8914,524 @@ var getters = /*#__PURE__*/Object.freeze({
   getSchema: getSchema$1
 });
 
-var _extends$6 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var ObjectPath = createCommonjsModule(function (module, exports) {
+!function(undefined$1) {
+	var r = {
+		'\'': /\\\'/g,
+		'"': /\\\"/g,
+	};
+
+	var ObjectPath = {
+		parse: function(str){
+			if(typeof str !== 'string'){
+				throw new TypeError('ObjectPath.parse must be passed a string');
+			}
+
+			var i = 0;
+			var parts = [];
+			var d, b, q, c;
+			while (i < str.length){
+				d = str.indexOf('.', i);
+				b = str.indexOf('[', i);
+
+				// we've reached the end
+				if (d === -1 && b === -1){
+					parts.push(str.slice(i, str.length));
+					i = str.length;
+				}
+
+				// dots
+				else if (b === -1 || (d !== -1 && d < b)) {
+					parts.push(str.slice(i, d));
+					i = d + 1;
+				}
+
+				// brackets
+				else {
+					if (b > i){
+						parts.push(str.slice(i, b));
+						i = b;
+					}
+					q = str.slice(b+1, b+2);
+					if (q !== '"' && q !=='\'') {
+						c = str.indexOf(']', b);
+						if (c === -1) c = str.length;
+						parts.push(str.slice(i + 1, c));
+						i = (str.slice(c + 1, c + 2) === '.') ? c + 2 : c + 1;
+					} else {
+						c = str.indexOf(q+']', b);
+						if (c === -1) c = str.length;
+						while (str.slice(c - 1, c) === '\\' && b < str.length){
+							b++;
+							c = str.indexOf(q+']', b);
+						}
+						parts.push(str.slice(i + 2, c).replace(r[q], q));
+						i = (str.slice(c + 2, c + 3) === '.') ? c + 3 : c + 2;
+					}
+				}
+			}
+			return parts;
+		},
+
+		// root === true : auto calculate root; must be dot-notation friendly
+		// root String : the string to use as root
+		stringify: function(arr, quote){
+
+			if(!Array.isArray(arr))
+				arr = [arr.toString()];
+
+			quote = quote === '"' ? '"' : '\'';
+
+			return arr.map(function(n){ return '[' + quote + (n.toString()).replace(new RegExp(quote, 'g'), '\\' + quote) + quote + ']'; }).join('');
+		},
+
+		normalize: function(data, quote){
+			return ObjectPath.stringify(Array.isArray(data) ? data : ObjectPath.parse(data), quote);
+		},
+
+		// Angular
+		registerModule: function(angular) {
+			angular.module('ObjectPath', []).provider('ObjectPath', function(){
+				this.parse = ObjectPath.parse;
+				this.stringify = ObjectPath.stringify;
+				this.normalize = ObjectPath.normalize;
+				this.$get = function(){
+					return ObjectPath;
+				};
+			});
+		}
+	};
+
+	// AMD
+	if (typeof undefined$1 === 'function' && undefined$1.amd) {
+		undefined$1(function() {
+			return {
+				
+				// this is only namespaced for backwards compatibility when fixing issue #8
+				ObjectPath: ObjectPath,
+				
+				// export these as top-level functions
+				parse: ObjectPath.parse,
+				stringify: ObjectPath.stringify,
+				normalize: ObjectPath.normalize
+			};
+		});
+	}
+
+	// CommonJS
+	else {
+		exports.ObjectPath = ObjectPath;
+	}
+	
+}();
+});
+var ObjectPath_1 = ObjectPath.ObjectPath;
+
+var _objectpath_1_2_2_objectpath = ObjectPath.ObjectPath;
+
+var rule = {
+  boolean: ['checkbox'],
+  object: ['fieldset'],
+  array: ['checkboxes', 'array'],
+  number: ['number'],
+  integer: ['number'],
+  string: ['date', 'image', 'select', 'text']
+};
+
+function defaultRule (name, schema, options) {
+  var def = {
+    key: options.path
+  };
+
+  def.title = typeof schema.title !== 'undefined' ? schema.title : name;
+
+  if (schema.description) {
+    def.description = schema.description;
+  }
+
+  if (options.required) {
+    def.required = true;
+  }
+
+  if (options.col) {
+    def.col = options.col;
+  }
+
+  // def.schema = schema
+
+  options.lookup[_objectpath_1_2_2_objectpath.stringify(options.path)] = def;
+
+  return def;
+}
+
+function arrayRule (def, schema, options) {
+  var type = schema.type;
+
+  delete options.parentType;
+  delete options.col;
+
+  if (type === 'array') {
+    def.type = 'array';
+    def.items = [];
+
+    var path = options.path.slice();
+
+    // 用$index来代替[]，$index作为数组坐标，可替换真实坐标
+    path.push('$index');
+    this._parse('', schema.items, def.items, {
+      path: path,
+      lookup: options.lookup,
+      parentType: 'array'
+    });
+  }
+}
+
+function checkboxRule (def, schema) {
+  var type = schema.type;
+
+  if (type === 'boolean') {
+    schema.default = false;
+    def.type = 'checkbox';
+  }
+}
+
+function checkboxesRule (def, schema) {
+  var type = schema.type;
+
+  if (type === 'array' && schema.items && schema.items['enum']) {
+    def.type = 'checkboxes';
+    def.options = enumToOptions(schema.items['enum']);
+    // schema.default = []
+
+    if (def.required && !schema.minItems) {
+      schema.minItems = 1;
+    }
+  }
+}
+
+var DATE_TYPE_ENUM = 'date,date-time,time';
+
+function dateRule (def, schema) {
+  var type = schema.type;
+  var format = schema.format;
+
+  if (type === 'string' && format && DATE_TYPE_ENUM.indexOf(format) > -1) {
+    def.type = 'date';
+    // schema.default = ''
+  }
+}
+
+var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function fieldsetRule (def, schema, options) {
+  var _this = this;
+
+  var type = schema.type;
+  var parentType = options.parentType;
+  delete options.parentType;
+  delete options.col;
+
+  if (type === 'object') {
+    if (parentType && parentType === 'array') {
+      var size = _$2.size(schema.properties);
+      var itemType = size > 4 ? 'v-fieldset' : 'inline';
+
+      def.type = itemType;
+
+      if (itemType === 'inline') {
+        options.col = Math.floor(12 / size);
+      }
+    } else {
+      def.type = 'v-fieldset';
+    }
+
+    def.items = [];
+
+    _$2.each(schema.properties, function (val, key) {
+      if (/\./.test(key)) {
+        key = [key];
+      }
+
+      var path = options.path.slice();
+      path.push(key);
+
+      var required = schema.required && _$2.indexOf(schema.required, key) !== -1;
+
+      _this._parse(key, val, def.items, _extends$1({}, options, {
+        path: path,
+        required: required,
+        lookup: options.lookup
+      }));
+    });
+  }
+}
+
+function numberRule (def, schema) {
+  var type = schema.type;
+
+  if (type === 'number') {
+    def.type = 'number';
+  }
+}
+
+function selectRule (def, schema) {
+  var type = schema.type;
+
+  if (type === 'string' && schema['enum']) {
+    def.type = 'v-select';
+    def.options = enumToOptions(schema['enum']);
+  }
+}
+
+function textRule (def, schema) {
+  var type = schema.type;
+
+  if (type === 'string') {
+    def.type = 'v-text';
+  }
+}
+
+function imageUploadRule (def, schema) {
+  var type = schema.type;
+  var format = schema.format;
+
+  if (type === 'string' && format && format === 'image') {
+    def.type = 'image-upload';
+    // schema.default = ''
+  }
+}
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var rulesMap = {
+  checkbox: checkboxRule,
+  fieldset: fieldsetRule,
+  checkboxes: checkboxesRule,
+  array: arrayRule,
+  number: numberRule,
+  date: dateRule,
+  select: selectRule,
+  text: textRule,
+  image: imageUploadRule
+};
+
+var BUILD_IN_TYPE = ['text', 'select', 'textarea', 'html', 'grid', 'fieldset'];
+
+var Generator = function () {
+  function Generator() {
+    _classCallCheck(this, Generator);
+
+    this.rules = {};
+    this.init();
+  }
+
+  _createClass(Generator, [{
+    key: 'init',
+    value: function init() {
+      var rules = {};
+
+      _$2.each(rule, function (list, type) {
+        rules[type] = list.map(function (item) {
+          return rulesMap[item];
+        });
+      });
+
+      this.rules = rules;
+    }
+
+    /**
+     * 给指定类型添加规则
+     * @param {String} type data type
+     * @param {Function} rule 规则
+     * @param {Number} idx 添加位置，不提供则是添加到第一位
+     */
+
+  }, {
+    key: 'addRule',
+    value: function addRule(type, rule) {
+      var idx = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+      var rules = this.rules[type];
+
+      if (!rules) {
+        throw new Error('\u4E0D\u652F\u6301\u7684\u7C7B\u578B: ' + type);
+      }
+
+      rules.splice(idx, 0, rule);
+    }
+
+    /**
+     * 生成表单模型
+     * @param {Object} schema 
+     * @param {Array} definition 
+     */
+
+  }, {
+    key: 'parse',
+    value: function parse(schema) {
+      var _this = this;
+
+      var definition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      if (!schema && schema.properties) {
+        throw new Error('schema no validate!');
+      }
+
+      var options = { path: [], lookup: {} };
+      var schemaForm = [];
+
+      _$2.each(schema.properties, function (val, key) {
+        var required = schema.required && _$2.indexOf(schema.required, key) !== -1;
+
+        _this._parse(key, val, schemaForm, {
+          path: [key],
+          required: required,
+          lookup: options.lookup
+        });
+      });
+
+      // 再根据form definition合并form schema
+      if (definition.length) {
+        definition = combine(definition, schemaForm, options.lookup);
+      } else {
+        definition = schemaForm;
+      }
+
+      return definition;
+    }
+
+    /**
+     * 生成表单模型
+     * @param {Object} schema 
+     * @param {Array} definition 
+     */
+
+  }, {
+    key: '_parse',
+    value: function _parse(name, schema, definition, options) {
+      var rules = this.rules[schema.type];
+      var def = void 0;
+
+      if (rules) {
+        def = defaultRule(name, schema, options);
+
+        for (var i = 0, len = rules.length; i < len; i++) {
+          rules[i].call(this, def, schema, options);
+
+          if (def.type) {
+            break;
+          }
+        }
+      }
+
+      definition.push(def);
+    }
+  }, {
+    key: 'getDefaultModal',
+    value: function getDefaultModal(schema) {
+      var model = {};
+
+      _$2.each(schema.properties, function (val, key) {
+        defaultValue(val, key, model);
+      });
+
+      return model;
+    }
+  }]);
+
+  return Generator;
+}();
+
+function defaultValue(schema, key, model) {
+  var type = schema.type;
+
+  if (type === 'object') {
+    model[key] = {};
+
+    _$2.each(schema.properties, function (val, _key) {
+      defaultValue(val, _key, model[key]);
+    });
+  } else if (type === 'array') {
+    model[key] = [];
+    defaultValue(schema.items, 0, model[key]);
+  } else {
+    if (schema.default) {
+      model[key] = schema.default;
+    }
+  }
+}
+
+// 合并form definition & schemaForm
+function combine(form, schemaForm, lookup) {
+  var idx = _$2.indexOf(form, '*');
+
+  // 用schema生成的默认定义
+  if (idx === 0) {
+    return schemaForm;
+  }
+
+  // Important: 存在*就意味着使用schema生成的默认定义，只是在前后做一定的扩展，如果此时存在同名定义，就会存在两个定义。
+  if (idx !== -1) {
+    form = form.slice(0, idx).concat(schemaForm).concat(form.slice(idx + 1));
+
+    return form;
+  }
+
+  var definition = [];
+
+  _$2.each(form, function (obj) {
+    if (typeof obj === 'string') {
+      obj = {
+        key: obj
+      };
+    }
+
+    if (obj.key && typeof obj.key === 'string') {
+      obj.key = obj.key.replace(/\[\]/g, '.$index');
+      obj.key = _objectpath_1_2_2_objectpath.parse(obj.key);
+    }
+
+    // if (def.options) {
+    //   def.options = formatOptions(obj.options)
+    // }
+    var def = void 0;
+
+    // extend with schema form from schema
+    if (obj.key) {
+      var path = _objectpath_1_2_2_objectpath.stringify(obj.key);
+      def = lookup[path];
+
+      if (def) {
+        _$2.each(def, function (val, key) {
+          if (typeof obj[key] === 'undefined') {
+            obj[key] = val;
+          }
+        });
+      }
+    }
+
+    // 保留html,添加v-前缀
+    if (_$2.indexOf(BUILD_IN_TYPE, obj.type) > -1) {
+      obj.type = 'v-' + obj.type;
+    }
+
+    if (obj.items) {
+      if (def) {
+        obj.items = combine(obj.items, def.items, lookup);
+      } else {
+        obj.items = combine(obj.items, schemaForm, lookup);
+      }
+    }
+
+    definition.push(obj);
+  });
+
+  return definition;
+}
+
+var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var state$1 = {
   schema: {},
@@ -11133,14 +9443,1699 @@ var state$1 = {
   ajv: null,
   validator: null,
   // exclude: [],  // 需要排除的校验字段
-  isRootArray: false
+  isRootArray: false,
+  generator: new Generator()
 };
 
-var Store = {
+var store = {
   state: state$1,
-  mutations: _extends$6({}, mutations),
-  getters: _extends$6({}, getters)
+  mutations: _extends$2({}, mutations),
+  getters: _extends$2({}, getters)
 };
+
+//
+
+var plugins = ['lists', 'advlist', 'image', 'table', 'textcolor', 'colorpicker', 'codesample', 'contextmenu', 'link', 'fullscreen', 'help', 'preview', 'searchreplace', 'hr', 'wordcount', 'autosave'
+// 'powerpaste'
+];
+var toolbars = ['undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | table hr link image | searchreplace | fullscreen preview help'];
+
+var defaults$3 = {
+  init: {
+    height: 500,
+    contextmenu: 'link image inserttable | cell row column deletetable',
+    default_link_target: '_blank',
+    external_plugins: {
+      'powerpaste': '/style/cms/powerpaste/plugin.js'
+    },
+    powerpaste_allow_local_images: true,
+    powerpaste_word_import: 'prompt',
+    powerpaste_html_import: 'prompt',
+    image_advtab: true,
+    images_upload_handler: function images_upload_handler(blobInfo, success, failure) {
+      var image = 'data:image/' + blobInfo.filename().split('.')[1] + ';base64,' + blobInfo.base64();
+
+      store.dispatch('uploadImage', image).then(function (uri) {
+        success(uri);
+      }).catch(function (err) {
+        console.error(err);
+        failure(err.message || '');
+      });
+    }
+  }
+};
+
+var script$9 = {
+  computed: {
+    config: function config() {
+      var config = this.definition.config || {};
+      var plugin = plugins.slice();
+      var toolbar = toolbars.slice();
+
+      if (config.plugins) {
+        plugin = plugin.concat(config.plugins.split(' '));
+        plugin = _.uniq(plugin);
+        delete config.plugins;
+      }
+
+      if (config.toolbar) {
+        toolbar.push(config.toolbar);
+        delete config.toolbar;
+      }
+
+      return _extend_3_0_2_extend(true, {}, defaults$3, config, {
+        init: {
+          plugins: plugin.join(' '),
+          toolbar: toolbar
+        }
+      });
+    }
+  },
+  mixins: [basicMixin],
+  components: {
+    vEditor: Editor
+  }
+};
+
+/* script */
+var __vue_script__$9 = script$9;
+
+/* template */
+var __vue_render__$9 = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("v-editor", {
+    attrs: { disabled: _vm.definition.disabled, init: _vm.config.init },
+    model: {
+      value: _vm.value,
+      callback: function callback($$v) {
+        _vm.value = $$v;
+      },
+      expression: "value"
+    }
+  });
+};
+var __vue_staticRenderFns__$9 = [];
+__vue_render__$9._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$9 = undefined;
+/* scoped */
+var __vue_scope_id__$9 = undefined;
+/* module identifier */
+var __vue_module_identifier__$9 = undefined;
+/* functional template */
+var __vue_is_functional_template__$9 = false;
+/* style inject */
+
+/* style inject SSR */
+
+var Editor$1 = normalizeComponent_1({ render: __vue_render__$9, staticRenderFns: __vue_staticRenderFns__$9 }, __vue_inject_styles__$9, __vue_script__$9, __vue_scope_id__$9, __vue_is_functional_template__$9, __vue_module_identifier__$9, undefined, undefined);
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var script$a = {
+  name: 'picture-input',
+  props: {
+    width: {
+      type: [String, Number],
+      default: Number.MAX_SAFE_INTEGER
+    },
+    height: {
+      type: [String, Number],
+      default: Number.MAX_SAFE_INTEGER
+    },
+    margin: {
+      type: [String, Number],
+      default: 0
+    },
+    accept: {
+      type: String,
+      default: 'image/*'
+    },
+    size: {
+      type: [String, Number],
+      default: Number.MAX_SAFE_INTEGER
+    },
+    name: {
+      type: String,
+      default: null
+    },
+    id: {
+      type: [String, Number],
+      default: null
+    },
+    buttonClass: {
+      type: String,
+      default: 'btn btn-primary button'
+    },
+    removeButtonClass: {
+      type: String,
+      default: 'btn btn-secondary button secondary'
+    },
+    aspectButtonClass: {
+      type: String,
+      default: 'btn btn-secondary button secondary'
+    },
+    prefill: {
+      type: [String, File],
+      default: ''
+    },
+    prefillOptions: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    crop: {
+      type: Boolean,
+      default: true
+    },
+    radius: {
+      type: [String, Number],
+      default: 0
+    },
+    removable: {
+      type: Boolean,
+      default: false
+    },
+    hideChangeButton: {
+      type: Boolean,
+      default: false
+    },
+    autoToggleAspectRatio: {
+      type: Boolean,
+      default: false
+    },
+    toggleAspectRatio: {
+      type: Boolean,
+      default: false
+    },
+    changeOnClick: {
+      type: Boolean,
+      default: true
+    },
+    plain: {
+      type: Boolean,
+      default: false
+    },
+    zIndex: {
+      type: Number,
+      default: 10000
+    },
+    alertOnError: {
+      type: Boolean,
+      default: true
+    },
+    customStrings: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
+  watch: {
+    prefill () {
+      if (this.prefill) {
+        this.preloadImage(this.prefill, this.prefillOptions);
+      } else {
+        this.removeImage();
+      }
+    }
+  },
+  data () {
+    return {
+      imageSelected: false,
+      previewHeight: 0,
+      previewWidth: 0,
+      draggingOver: false,
+      canvasWidth: 0,
+      canvasHeight: 0,
+      strings: {
+        upload: '<p>Your device does not support file uploading.</p>',
+        drag: 'Drag an image or <br>click here to select a file',
+        tap: 'Tap here to select a photo <br>from your gallery',
+        change: 'Change Photo',
+        aspect: 'Landscape/Portrait',
+        remove: 'Remove Photo',
+        select: 'Select a Photo',
+        selected: '<p>Photo successfully selected!</p>',
+        fileSize: 'The file size exceeds the limit',
+        fileType: 'This file type is not supported.'
+      }
+    }
+  },
+  mounted () {
+    this.updateStrings();
+    if (this.prefill) {
+      this.preloadImage(this.prefill, this.prefillOptions);
+    }
+
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+      this.onResize();
+    });
+    if (this.supportsPreview) {
+      this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI);
+      const canvas = this.$refs.previewCanvas;
+      if (canvas.getContext) {
+        this.context = canvas.getContext('2d');
+        this.context.scale(this.pixelRatio, this.pixelRatio);
+      }
+    }
+    if (this.accept !== 'image/*') {
+      this.fileTypes = this.accept.split(',');
+      this.fileTypes = this.fileTypes.map(s => s.trim());
+    }
+
+    this.canvasWidth = this.width;
+    this.canvasHeight = this.height;
+
+    this.$on('error', this.onError);
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onResize);
+    this.$off('error', this.onError);
+  },
+  methods: {
+    updateStrings () {
+      for (let s in this.customStrings) {
+        if (s in this.strings && typeof this.customStrings[s] === 'string') {
+          this.strings[s] = this.customStrings[s];
+        }
+      }
+    },
+    onClick () {
+      if (!this.imageSelected) {
+        this.selectImage();
+        return
+      }
+
+      if (this.changeOnClick) {
+        this.selectImage();
+      }
+
+      this.$emit('click');
+    },
+    onResize () {
+      this.resizeCanvas();
+
+      if (this.imageObject) {
+        this.drawImage(this.imageObject);
+      }
+    },
+    onDragStart () {
+      if (!this.supportsDragAndDrop) {
+        return
+      }
+      this.draggingOver = true;
+    },
+    onDragStop () {
+      if (!this.supportsDragAndDrop) {
+        return
+      }
+      this.draggingOver = false;
+    },
+    onFileDrop (e) {
+      this.onDragStop();
+      this.onFileChange(e);
+    },
+    onFileChange (e, prefill) {
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return
+      }
+      if (files[0].size <= 0 || files[0].size > this.size * 1024 * 1024) {
+        this.$emit('error', {
+          type: 'fileSize',
+          fileSize: files[0].size,
+          fileType: files[0].type,
+          fileName: files[0].name,
+          message: this.strings.fileSize + ' (' + this.size + 'MB)'
+        });
+        return
+      }
+      if (files[0].name === this.fileName && files[0].size === this.fileSize && this.fileModified === files[0].lastModified) {
+        return
+      }
+
+      this.file = files[0];
+      this.fileName = files[0].name;
+      this.fileSize = files[0].size;
+      this.fileModified = files[0].lastModified;
+      this.fileType = files[0].type;
+
+      if (this.accept === 'image/*') {
+        if (files[0].type.substr(0, 6) !== 'image/') {
+          return
+        }
+      } else {
+        if (this.fileTypes.indexOf(files[0].type) === -1) {
+          this.$emit('error', {
+            type: 'fileType',
+            fileSize: files[0].size,
+            fileType: files[0].type,
+            fileName: files[0].name,
+            message: this.strings.fileType
+          });
+          return
+        }
+      }
+      this.imageSelected = true;
+      this.image = '';
+      if (this.supportsPreview) {
+        this.loadImage(files[0], prefill || false);
+      } else {
+        if (prefill) {
+          this.$emit('prefill');
+        } else {
+          this.$emit('change', this.image);
+        }
+      }
+    },
+    onError (error) {
+      if (this.alertOnError) {
+        alert(error.message);
+      }
+    },
+    loadImage (file, prefill) {
+      this.getEXIFOrientation(file, orientation => {
+        this.setOrientation(orientation);
+        let reader = new FileReader();
+        reader.onload = e => {
+          this.image = e.target.result;
+          if (prefill) {
+            this.$emit('prefill');
+          } else {
+            this.$emit('change', this.image);
+          }
+          this.imageObject = new Image();
+          this.imageObject.onload = () => {
+            if (this.autoToggleAspectRatio) {
+              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight);
+              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height);
+              if (canvasOrientation !== imageOrientation) {
+                this.rotateCanvas();
+              }
+            }
+            this.drawImage(this.imageObject);
+          };
+          this.imageObject.src = this.image;
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+    drawImage (image) {
+      this.imageWidth = image.width;
+      this.imageHeight = image.height;
+      this.imageRatio = image.width / image.height;
+      let offsetX = 0;
+      let offsetY = 0;
+      let scaledWidth = this.previewWidth;
+      let scaledHeight = this.previewHeight;
+      const previewRatio = this.previewWidth / this.previewHeight;
+      if (this.crop) {
+        if (this.imageRatio >= previewRatio) {
+          scaledWidth = scaledHeight * this.imageRatio;
+          offsetX = (this.previewWidth - scaledWidth) / 2;
+        } else {
+          scaledHeight = scaledWidth / this.imageRatio;
+          offsetY = (this.previewHeight - scaledHeight) / 2;
+        }
+      } else {
+        if (this.imageRatio >= previewRatio) {
+          scaledHeight = scaledWidth / this.imageRatio;
+          offsetY = (this.previewHeight - scaledHeight) / 2;
+        } else {
+          scaledWidth = scaledHeight * this.imageRatio;
+          offsetX = (this.previewWidth - scaledWidth) / 2;
+        }
+      }
+      const canvas = this.$refs.previewCanvas;
+      canvas.style.background = 'none';
+      canvas.width = this.previewWidth * this.pixelRatio;
+      canvas.height = this.previewHeight * this.pixelRatio;
+      this.context.setTransform(1, 0, 0, 1, 0, 0);
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+      if (this.rotate) {
+        this.context.translate(offsetX * this.pixelRatio, offsetY * this.pixelRatio);
+        this.context.translate(scaledWidth / 2 * this.pixelRatio, scaledHeight / 2 * this.pixelRatio);
+        this.context.rotate(this.rotate);
+        offsetX = -scaledWidth / 2;
+        offsetY = -scaledHeight / 2;
+      }
+      this.context.drawImage(image,
+        offsetX * this.pixelRatio,
+        offsetY * this.pixelRatio,
+        scaledWidth * this.pixelRatio,
+        scaledHeight * this.pixelRatio);
+    },
+    selectImage () {
+      this.$refs.fileInput.click();
+    },
+    removeImage () {
+      this.$refs.fileInput.value = '';
+      this.$refs.fileInput.type = '';
+      this.$refs.fileInput.type = 'file';
+      this.fileName = '';
+      this.fileType = '';
+      this.fileSize = 0;
+      this.fileModified = 0;
+      this.imageSelected = false;
+      this.image = '';
+      this.file = null;
+      this.imageObject = null;
+      this.$refs.previewCanvas.style.backgroundColor = 'rgba(200,200,200,.25)';
+      this.$refs.previewCanvas.width = this.previewWidth * this.pixelRatio;
+      this.$emit('remove');
+    },
+    rotateImage () {
+      this.rotateCanvas();
+
+      if (this.imageObject) {
+        this.drawImage(this.imageObject);
+      }
+
+      let newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight);
+      this.$emit('aspectratiochange', newOrientation);
+    },
+    resizeCanvas () {
+      let previewRatio = this.canvasWidth / this.canvasHeight;
+      let newWidth = this.$refs.container.clientWidth;
+      if (!this.toggleAspectRatio && newWidth === this.containerWidth) {
+        return
+      }
+      this.containerWidth = newWidth;
+      this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth);
+      this.previewHeight = this.previewWidth / previewRatio;
+    },
+    getOrientation (width, height) {
+      let orientation = 'square';
+
+      if (width > height) {
+        orientation = 'landscape';
+      } else if (width < height) {
+        orientation = 'portrait';
+      }
+
+      return orientation
+    },
+    switchCanvasOrientation () {
+      const canvasWidth = this.canvasWidth;
+      const canvasHeight = this.canvasHeight;
+
+      this.canvasWidth = canvasHeight;
+      this.canvasHeight = canvasWidth;
+    },
+    rotateCanvas () {
+      this.switchCanvasOrientation();
+      this.resizeCanvas();
+    },
+    setOrientation (orientation) {
+      this.rotate = false;
+      if (orientation === 8) {
+        this.rotate = -Math.PI / 2;
+      } else if (orientation === 6) {
+        this.rotate = Math.PI / 2;
+      } else if (orientation === 3) {
+        this.rotate = -Math.PI;
+      }
+    },
+    getEXIFOrientation (file, callback) {
+      var reader = new FileReader();
+      reader.onload = e => {
+        var view = new DataView(e.target.result);
+        if (view.getUint16(0, false) !== 0xFFD8) {
+          return callback(-2)
+        }
+        var length = view.byteLength;
+        var offset = 2;
+        while (offset < length) {
+          var marker = view.getUint16(offset, false);
+          offset += 2;
+          if (marker === 0xFFE1) {
+            if (view.getUint32(offset += 2, false) !== 0x45786966) {
+              return callback(-1)
+            }
+            var little = view.getUint16(offset += 6, false) === 0x4949;
+            offset += view.getUint32(offset + 4, little);
+            var tags = view.getUint16(offset, little);
+            offset += 2;
+            for (var i = 0; i < tags; i++) {
+              if (view.getUint16(offset + (i * 12), little) === 0x0112) {
+                return callback(view.getUint16(offset + (i * 12) + 8, little))
+              }
+            }
+          } else if ((marker & 0xFF00) !== 0xFF00) {
+            break
+          } else {
+            offset += view.getUint16(offset, false);
+          }
+        }
+        return callback(-1)
+      };
+      reader.readAsArrayBuffer(file.slice(0, 65536));
+    },
+    preloadImage (source, options) {
+      // ie 11 support
+      let File = window.File;
+      try {
+        new File([], ''); // eslint-disable-line
+      } catch (e) {
+        File = class File extends Blob {
+          constructor (chunks, filename, opts = {}) {
+            super(chunks, opts);
+            this.lastModifiedDate = new Date();
+            this.lastModified = +this.lastModifiedDate;
+            this.name = filename;
+          }
+        };
+      }
+      options = Object.assign({}, options);
+      if (typeof source === 'object') {
+        this.imageSelected = true;
+        this.image = '';
+        if (this.supportsPreview) {
+          this.loadImage(source, true);
+        } else {
+          this.$emit('prefill');
+        }
+        return
+      }
+      let headers = new Headers();
+      headers.append('Accept', 'image/*');
+      fetch(source, {
+        method: 'GET',
+        mode: 'cors',
+        headers: headers
+      }).then(response => {
+        return response.blob()
+      })
+      .then(imageBlob => {
+        let e = { target: { files: [] } };
+        const fileName = options.fileName || source.split('/').slice(-1)[0];
+        let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0]));
+        mediaType = mediaType.replace('jpg', 'jpeg');
+        e.target.files[0] = new File([imageBlob], fileName, { type: mediaType });
+        this.onFileChange(e, true);
+      })
+      .catch(err => {
+        this.$emit('error', {
+          type: 'failedPrefill',
+          message: 'Failed loading prefill image: ' + err
+        });
+      });
+    }
+  },
+  computed: {
+    supportsUpload () {
+      if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) {
+        return false
+      }
+      const el = document.createElement('input');
+      el.type = 'file';
+      return !el.disabled
+    },
+    supportsPreview () {
+      return window.FileReader && !!window.CanvasRenderingContext2D
+    },
+    supportsDragAndDrop () {
+      const div = document.createElement('div');
+      return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)
+    },
+    computedClasses () {
+      const classObject = {};
+      classObject['dragging-over'] = this.draggingOver;
+      return classObject
+    },
+    fontSize () {
+      return Math.min(0.04 * this.previewWidth, 21) + 'px'
+    }
+  }
+};
+
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+function createInjector(context) {
+  return function (id, style) {
+    return addStyle(id, style);
+  };
+}
+var HEAD = document.head || document.getElementsByTagName('head')[0];
+var styles = {};
+
+function addStyle(id, css) {
+  var group = isOldIE ? css.media || 'default' : id;
+  var style = styles[group] || (styles[group] = {
+    ids: new Set(),
+    styles: []
+  });
+
+  if (!style.ids.has(id)) {
+    style.ids.add(id);
+    var code = css.source;
+
+    if (css.map) {
+      // https://developer.chrome.com/devtools/docs/javascript-debugging
+      // this makes source maps inside style tags work properly in Chrome
+      code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+      code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+    }
+
+    if (!style.element) {
+      style.element = document.createElement('style');
+      style.element.type = 'text/css';
+      if (css.media) style.element.setAttribute('media', css.media);
+      HEAD.appendChild(style.element);
+    }
+
+    if ('styleSheet' in style.element) {
+      style.styles.push(code);
+      style.element.styleSheet.cssText = style.styles.filter(Boolean).join('\n');
+    } else {
+      var index = style.ids.size - 1;
+      var textNode = document.createTextNode(code);
+      var nodes = style.element.childNodes;
+      if (nodes[index]) style.element.removeChild(nodes[index]);
+      if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+    }
+  }
+}
+
+var browser = createInjector;
+
+/* script */
+const __vue_script__$a = script$a;
+
+/* template */
+var __vue_render__$a = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    {
+      ref: "container",
+      staticClass: "picture-input",
+      attrs: { id: "picture-input" }
+    },
+    [
+      !_vm.supportsUpload
+        ? _c("div", { domProps: { innerHTML: _vm._s(_vm.strings.upload) } })
+        : _vm.supportsPreview
+        ? _c("div", [
+            _c(
+              "div",
+              {
+                staticClass: "preview-container",
+                style: {
+                  maxWidth: _vm.previewWidth + "px",
+                  height: _vm.previewHeight + "px",
+                  borderRadius: _vm.radius + "%"
+                }
+              },
+              [
+                _c("canvas", {
+                  ref: "previewCanvas",
+                  staticClass: "picture-preview",
+                  class: _vm.computedClasses,
+                  style: {
+                    height: _vm.previewHeight + "px",
+                    zIndex: _vm.zIndex + 1
+                  },
+                  on: {
+                    drag: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                    },
+                    dragover: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                    },
+                    dragstart: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                      return _vm.onDragStart($event)
+                    },
+                    dragenter: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                      return _vm.onDragStart($event)
+                    },
+                    dragend: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                      return _vm.onDragStop($event)
+                    },
+                    dragleave: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                      return _vm.onDragStop($event)
+                    },
+                    drop: function($event) {
+                      $event.stopPropagation();
+                      $event.preventDefault();
+                      return _vm.onFileDrop($event)
+                    },
+                    click: function($event) {
+                      $event.preventDefault();
+                      return _vm.onClick($event)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                !_vm.imageSelected && !_vm.plain
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "picture-inner",
+                        style: {
+                          top: -_vm.previewHeight + "px",
+                          marginBottom: -_vm.previewHeight + "px",
+                          fontSize: _vm.fontSize,
+                          borderRadius: _vm.radius + "%",
+                          zIndex: _vm.zIndex + 2
+                        }
+                      },
+                      [
+                        _vm.supportsDragAndDrop
+                          ? _c("span", {
+                              staticClass: "picture-inner-text",
+                              domProps: { innerHTML: _vm._s(_vm.strings.drag) }
+                            })
+                          : _c("span", {
+                              staticClass: "picture-inner-text",
+                              domProps: { innerHTML: _vm._s(_vm.strings.tap) }
+                            })
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            ),
+            _vm._v(" "),
+            _vm.imageSelected && !_vm.hideChangeButton
+              ? _c(
+                  "button",
+                  {
+                    class: _vm.buttonClass,
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault();
+                        return _vm.selectImage($event)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.strings.change))]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.imageSelected && _vm.removable
+              ? _c(
+                  "button",
+                  {
+                    class: _vm.removeButtonClass,
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault();
+                        return _vm.removeImage($event)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.strings.remove))]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.imageSelected &&
+            _vm.toggleAspectRatio &&
+            _vm.width !== _vm.height
+              ? _c(
+                  "button",
+                  {
+                    class: _vm.aspectButtonClass,
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault();
+                        return _vm.rotateImage($event)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.strings.aspect))]
+                )
+              : _vm._e()
+          ])
+        : _c("div", [
+            !_vm.imageSelected
+              ? _c(
+                  "button",
+                  {
+                    class: _vm.buttonClass,
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault();
+                        return _vm.selectImage($event)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.strings.select))]
+                )
+              : _c("div", [
+                  _c("div", {
+                    domProps: { innerHTML: _vm._s(_vm.strings.selected) }
+                  }),
+                  _vm._v(" "),
+                  !_vm.hideChangeButton
+                    ? _c(
+                        "button",
+                        {
+                          class: _vm.buttonClass,
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault();
+                              return _vm.selectImage($event)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.strings.change))]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.removable
+                    ? _c(
+                        "button",
+                        {
+                          class: _vm.removeButtonClass,
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault();
+                              return _vm.removeImage($event)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.strings.remove))]
+                      )
+                    : _vm._e()
+                ])
+          ]),
+      _vm._v(" "),
+      _c("input", {
+        ref: "fileInput",
+        attrs: { type: "file", name: _vm.name, id: _vm.id, accept: _vm.accept },
+        on: { change: _vm.onFileChange }
+      })
+    ]
+  )
+};
+var __vue_staticRenderFns__$a = [];
+__vue_render__$a._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$a = function (inject) {
+    if (!inject) return
+    inject("data-v-4ae4354e_0", { source: "\n.picture-input[data-v-4ae4354e] {\n  width: 100%;\n  margin: 0 auto;\n  text-align: center;\n}\n.preview-container[data-v-4ae4354e] {\n  width: 100%;\n  box-sizing: border-box;\n  margin: 0 auto;\n  cursor: pointer;\n  overflow: hidden;\n}\n.picture-preview[data-v-4ae4354e] {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  z-index: 10001;\n  box-sizing: border-box;\n  background-color: rgba(200,200,200,.25);\n}\n.picture-preview.dragging-over[data-v-4ae4354e] {\n  filter: brightness(0.5);\n}\n.picture-inner[data-v-4ae4354e] {\n  position: relative;\n  z-index: 10002;\n  pointer-events: none;\n  box-sizing: border-box;\n  margin: 1em auto;\n  padding: 0.5em;\n  border: .3em dashed rgba(66,66,66,.15);\n  border-radius: 8px;\n  width: calc(100% - 2.5em);\n  height: calc(100% - 2.5em);\n  display: table;\n}\n.picture-inner .picture-inner-text[data-v-4ae4354e] {\n  display: table-cell;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n  line-height: 1.5;\n}\nbutton[data-v-4ae4354e] {\n  margin: 1em .25em;\n  cursor: pointer;\n}\ninput[type=file][data-v-4ae4354e] {\n  display: none;\n}\n", map: {"version":3,"sources":["/Users/wangchangbin/git/vue-form/node_modules/_vue-picture-input@2.1.6@vue-picture-input/PictureInput.vue"],"names":[],"mappings":";AAqjBA;EACA,WAAA;EACA,cAAA;EACA,kBAAA;AACA;AACA;EACA,WAAA;EACA,sBAAA;EACA,cAAA;EACA,eAAA;EACA,gBAAA;AACA;AACA;EACA,WAAA;EACA,YAAA;EACA,kBAAA;EACA,cAAA;EACA,sBAAA;EACA,uCAAA;AACA;AACA;EACA,uBAAA;AACA;AACA;EACA,kBAAA;EACA,cAAA;EACA,oBAAA;EACA,sBAAA;EACA,gBAAA;EACA,cAAA;EACA,sCAAA;EACA,kBAAA;EACA,yBAAA;EACA,0BAAA;EACA,cAAA;AACA;AACA;EACA,mBAAA;EACA,sBAAA;EACA,kBAAA;EACA,cAAA;EACA,gBAAA;AACA;AACA;EACA,iBAAA;EACA,eAAA;AACA;AACA;EACA,aAAA;AACA","file":"PictureInput.vue","sourcesContent":["<template>\n  <div ref=\"container\" id=\"picture-input\" class=\"picture-input\">\n    <div v-if=\"!supportsUpload\" v-html=\"strings.upload\"></div>\n    <div v-else-if=\"supportsPreview\">\n      <div class=\"preview-container\"\n        :style=\"{maxWidth: previewWidth + 'px', height: previewHeight + 'px', borderRadius: radius + '%'}\">\n          <canvas ref=\"previewCanvas\"\n            class=\"picture-preview\"\n            :class=\"computedClasses\"\n            @drag.stop.prevent=\"\"\n            @dragover.stop.prevent=\"\"\n            @dragstart.stop.prevent=\"onDragStart\"\n            @dragenter.stop.prevent=\"onDragStart\"\n            @dragend.stop.prevent=\"onDragStop\"\n            @dragleave.stop.prevent=\"onDragStop\"\n            @drop.stop.prevent=\"onFileDrop\"\n            @click.prevent=\"onClick\"\n            :style=\"{height: previewHeight + 'px', zIndex: zIndex + 1 }\">\n          </canvas>\n        <div v-if=\"!imageSelected && !plain\"\n          class=\"picture-inner\"\n            :style=\"{top: -previewHeight + 'px', marginBottom: -previewHeight + 'px', fontSize: fontSize, borderRadius: radius + '%', zIndex: zIndex + 2}\">\n          <span v-if=\"supportsDragAndDrop\" class=\"picture-inner-text\" v-html=\"strings.drag\"></span>\n          <span v-else class=\"picture-inner-text\" v-html=\"strings.tap\"></span>\n        </div>\n      </div>\n      <button v-if=\"imageSelected && !hideChangeButton\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.change }}</button>\n      <button v-if=\"imageSelected && removable\" @click.prevent=\"removeImage\" :class=\"removeButtonClass\">{{ strings.remove }}</button>\n      <button v-if=\"imageSelected && toggleAspectRatio && width !== height\" @click.prevent=\"rotateImage\" :class=\"aspectButtonClass\">{{ strings.aspect }}</button>\n    </div>\n    <div v-else>\n      <button v-if=\"!imageSelected\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.select }}</button>\n      <div v-else>\n        <div v-html=\"strings.selected\"></div>\n        <button v-if=\"!hideChangeButton\" @click.prevent=\"selectImage\" :class=\"buttonClass\">{{ strings.change }}</button>\n        <button v-if=\"removable\" @click.prevent=\"removeImage\" :class=\"removeButtonClass\">{{ strings.remove }}</button>\n      </div>\n    </div>\n    <input ref=\"fileInput\" type=\"file\" :name=\"name\" :id=\"id\" :accept=\"accept\" @change=\"onFileChange\">\n  </div>\n</template>\n\n<script>\nexport default {\n  name: 'picture-input',\n  props: {\n    width: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    height: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    margin: {\n      type: [String, Number],\n      default: 0\n    },\n    accept: {\n      type: String,\n      default: 'image/*'\n    },\n    size: {\n      type: [String, Number],\n      default: Number.MAX_SAFE_INTEGER\n    },\n    name: {\n      type: String,\n      default: null\n    },\n    id: {\n      type: [String, Number],\n      default: null\n    },\n    buttonClass: {\n      type: String,\n      default: 'btn btn-primary button'\n    },\n    removeButtonClass: {\n      type: String,\n      default: 'btn btn-secondary button secondary'\n    },\n    aspectButtonClass: {\n      type: String,\n      default: 'btn btn-secondary button secondary'\n    },\n    prefill: {\n      type: [String, File],\n      default: ''\n    },\n    prefillOptions: {\n      type: Object,\n      default: () => {\n        return {}\n      }\n    },\n    crop: {\n      type: Boolean,\n      default: true\n    },\n    radius: {\n      type: [String, Number],\n      default: 0\n    },\n    removable: {\n      type: Boolean,\n      default: false\n    },\n    hideChangeButton: {\n      type: Boolean,\n      default: false\n    },\n    autoToggleAspectRatio: {\n      type: Boolean,\n      default: false\n    },\n    toggleAspectRatio: {\n      type: Boolean,\n      default: false\n    },\n    changeOnClick: {\n      type: Boolean,\n      default: true\n    },\n    plain: {\n      type: Boolean,\n      default: false\n    },\n    zIndex: {\n      type: Number,\n      default: 10000\n    },\n    alertOnError: {\n      type: Boolean,\n      default: true\n    },\n    customStrings: {\n      type: Object,\n      default: () => {\n        return {}\n      }\n    }\n  },\n  watch: {\n    prefill () {\n      if (this.prefill) {\n        this.preloadImage(this.prefill, this.prefillOptions)\n      } else {\n        this.removeImage()\n      }\n    }\n  },\n  data () {\n    return {\n      imageSelected: false,\n      previewHeight: 0,\n      previewWidth: 0,\n      draggingOver: false,\n      canvasWidth: 0,\n      canvasHeight: 0,\n      strings: {\n        upload: '<p>Your device does not support file uploading.</p>',\n        drag: 'Drag an image or <br>click here to select a file',\n        tap: 'Tap here to select a photo <br>from your gallery',\n        change: 'Change Photo',\n        aspect: 'Landscape/Portrait',\n        remove: 'Remove Photo',\n        select: 'Select a Photo',\n        selected: '<p>Photo successfully selected!</p>',\n        fileSize: 'The file size exceeds the limit',\n        fileType: 'This file type is not supported.'\n      }\n    }\n  },\n  mounted () {\n    this.updateStrings()\n    if (this.prefill) {\n      this.preloadImage(this.prefill, this.prefillOptions)\n    }\n\n    this.$nextTick(() => {\n      window.addEventListener('resize', this.onResize)\n      this.onResize()\n    })\n    if (this.supportsPreview) {\n      this.pixelRatio = Math.round(window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI)\n      const canvas = this.$refs.previewCanvas\n      if (canvas.getContext) {\n        this.context = canvas.getContext('2d')\n        this.context.scale(this.pixelRatio, this.pixelRatio)\n      }\n    }\n    if (this.accept !== 'image/*') {\n      this.fileTypes = this.accept.split(',')\n      this.fileTypes = this.fileTypes.map(s => s.trim())\n    }\n\n    this.canvasWidth = this.width\n    this.canvasHeight = this.height\n\n    this.$on('error', this.onError)\n  },\n  beforeDestroy () {\n    window.removeEventListener('resize', this.onResize)\n    this.$off('error', this.onError)\n  },\n  methods: {\n    updateStrings () {\n      for (let s in this.customStrings) {\n        if (s in this.strings && typeof this.customStrings[s] === 'string') {\n          this.strings[s] = this.customStrings[s]\n        }\n      }\n    },\n    onClick () {\n      if (!this.imageSelected) {\n        this.selectImage()\n        return\n      }\n\n      if (this.changeOnClick) {\n        this.selectImage()\n      }\n\n      this.$emit('click')\n    },\n    onResize () {\n      this.resizeCanvas()\n\n      if (this.imageObject) {\n        this.drawImage(this.imageObject)\n      }\n    },\n    onDragStart () {\n      if (!this.supportsDragAndDrop) {\n        return\n      }\n      this.draggingOver = true\n    },\n    onDragStop () {\n      if (!this.supportsDragAndDrop) {\n        return\n      }\n      this.draggingOver = false\n    },\n    onFileDrop (e) {\n      this.onDragStop()\n      this.onFileChange(e)\n    },\n    onFileChange (e, prefill) {\n      let files = e.target.files || e.dataTransfer.files\n      if (!files.length) {\n        return\n      }\n      if (files[0].size <= 0 || files[0].size > this.size * 1024 * 1024) {\n        this.$emit('error', {\n          type: 'fileSize',\n          fileSize: files[0].size,\n          fileType: files[0].type,\n          fileName: files[0].name,\n          message: this.strings.fileSize + ' (' + this.size + 'MB)'\n        })\n        return\n      }\n      if (files[0].name === this.fileName && files[0].size === this.fileSize && this.fileModified === files[0].lastModified) {\n        return\n      }\n\n      this.file = files[0]\n      this.fileName = files[0].name\n      this.fileSize = files[0].size\n      this.fileModified = files[0].lastModified\n      this.fileType = files[0].type\n\n      if (this.accept === 'image/*') {\n        if (files[0].type.substr(0, 6) !== 'image/') {\n          return\n        }\n      } else {\n        if (this.fileTypes.indexOf(files[0].type) === -1) {\n          this.$emit('error', {\n            type: 'fileType',\n            fileSize: files[0].size,\n            fileType: files[0].type,\n            fileName: files[0].name,\n            message: this.strings.fileType\n          })\n          return\n        }\n      }\n      this.imageSelected = true\n      this.image = ''\n      if (this.supportsPreview) {\n        this.loadImage(files[0], prefill || false)\n      } else {\n        if (prefill) {\n          this.$emit('prefill')\n        } else {\n          this.$emit('change', this.image)\n        }\n      }\n    },\n    onError (error) {\n      if (this.alertOnError) {\n        alert(error.message)\n      }\n    },\n    loadImage (file, prefill) {\n      this.getEXIFOrientation(file, orientation => {\n        this.setOrientation(orientation)\n        let reader = new FileReader()\n        reader.onload = e => {\n          this.image = e.target.result\n          if (prefill) {\n            this.$emit('prefill')\n          } else {\n            this.$emit('change', this.image)\n          }\n          this.imageObject = new Image()\n          this.imageObject.onload = () => {\n            if (this.autoToggleAspectRatio) {\n              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)\n              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height)\n              if (canvasOrientation !== imageOrientation) {\n                this.rotateCanvas()\n              }\n            }\n            this.drawImage(this.imageObject)\n          }\n          this.imageObject.src = this.image\n        }\n        reader.readAsDataURL(file)\n      })\n    },\n    drawImage (image) {\n      this.imageWidth = image.width\n      this.imageHeight = image.height\n      this.imageRatio = image.width / image.height\n      let offsetX = 0\n      let offsetY = 0\n      let scaledWidth = this.previewWidth\n      let scaledHeight = this.previewHeight\n      const previewRatio = this.previewWidth / this.previewHeight\n      if (this.crop) {\n        if (this.imageRatio >= previewRatio) {\n          scaledWidth = scaledHeight * this.imageRatio\n          offsetX = (this.previewWidth - scaledWidth) / 2\n        } else {\n          scaledHeight = scaledWidth / this.imageRatio\n          offsetY = (this.previewHeight - scaledHeight) / 2\n        }\n      } else {\n        if (this.imageRatio >= previewRatio) {\n          scaledHeight = scaledWidth / this.imageRatio\n          offsetY = (this.previewHeight - scaledHeight) / 2\n        } else {\n          scaledWidth = scaledHeight * this.imageRatio\n          offsetX = (this.previewWidth - scaledWidth) / 2\n        }\n      }\n      const canvas = this.$refs.previewCanvas\n      canvas.style.background = 'none'\n      canvas.width = this.previewWidth * this.pixelRatio\n      canvas.height = this.previewHeight * this.pixelRatio\n      this.context.setTransform(1, 0, 0, 1, 0, 0)\n      this.context.clearRect(0, 0, canvas.width, canvas.height)\n      if (this.rotate) {\n        this.context.translate(offsetX * this.pixelRatio, offsetY * this.pixelRatio)\n        this.context.translate(scaledWidth / 2 * this.pixelRatio, scaledHeight / 2 * this.pixelRatio)\n        this.context.rotate(this.rotate)\n        offsetX = -scaledWidth / 2\n        offsetY = -scaledHeight / 2\n      }\n      this.context.drawImage(image,\n        offsetX * this.pixelRatio,\n        offsetY * this.pixelRatio,\n        scaledWidth * this.pixelRatio,\n        scaledHeight * this.pixelRatio)\n    },\n    selectImage () {\n      this.$refs.fileInput.click()\n    },\n    removeImage () {\n      this.$refs.fileInput.value = ''\n      this.$refs.fileInput.type = ''\n      this.$refs.fileInput.type = 'file'\n      this.fileName = ''\n      this.fileType = ''\n      this.fileSize = 0\n      this.fileModified = 0\n      this.imageSelected = false\n      this.image = ''\n      this.file = null\n      this.imageObject = null\n      this.$refs.previewCanvas.style.backgroundColor = 'rgba(200,200,200,.25)'\n      this.$refs.previewCanvas.width = this.previewWidth * this.pixelRatio\n      this.$emit('remove')\n    },\n    rotateImage () {\n      this.rotateCanvas()\n\n      if (this.imageObject) {\n        this.drawImage(this.imageObject)\n      }\n\n      let newOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)\n      this.$emit('aspectratiochange', newOrientation)\n    },\n    resizeCanvas () {\n      let previewRatio = this.canvasWidth / this.canvasHeight\n      let newWidth = this.$refs.container.clientWidth\n      if (!this.toggleAspectRatio && newWidth === this.containerWidth) {\n        return\n      }\n      this.containerWidth = newWidth\n      this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth)\n      this.previewHeight = this.previewWidth / previewRatio\n    },\n    getOrientation (width, height) {\n      let orientation = 'square'\n\n      if (width > height) {\n        orientation = 'landscape'\n      } else if (width < height) {\n        orientation = 'portrait'\n      }\n\n      return orientation\n    },\n    switchCanvasOrientation () {\n      const canvasWidth = this.canvasWidth\n      const canvasHeight = this.canvasHeight\n\n      this.canvasWidth = canvasHeight\n      this.canvasHeight = canvasWidth\n    },\n    rotateCanvas () {\n      this.switchCanvasOrientation()\n      this.resizeCanvas()\n    },\n    setOrientation (orientation) {\n      this.rotate = false\n      if (orientation === 8) {\n        this.rotate = -Math.PI / 2\n      } else if (orientation === 6) {\n        this.rotate = Math.PI / 2\n      } else if (orientation === 3) {\n        this.rotate = -Math.PI\n      }\n    },\n    getEXIFOrientation (file, callback) {\n      var reader = new FileReader()\n      reader.onload = e => {\n        var view = new DataView(e.target.result)\n        if (view.getUint16(0, false) !== 0xFFD8) {\n          return callback(-2)\n        }\n        var length = view.byteLength\n        var offset = 2\n        while (offset < length) {\n          var marker = view.getUint16(offset, false)\n          offset += 2\n          if (marker === 0xFFE1) {\n            if (view.getUint32(offset += 2, false) !== 0x45786966) {\n              return callback(-1)\n            }\n            var little = view.getUint16(offset += 6, false) === 0x4949\n            offset += view.getUint32(offset + 4, little)\n            var tags = view.getUint16(offset, little)\n            offset += 2\n            for (var i = 0; i < tags; i++) {\n              if (view.getUint16(offset + (i * 12), little) === 0x0112) {\n                return callback(view.getUint16(offset + (i * 12) + 8, little))\n              }\n            }\n          } else if ((marker & 0xFF00) !== 0xFF00) {\n            break\n          } else {\n            offset += view.getUint16(offset, false)\n          }\n        }\n        return callback(-1)\n      }\n      reader.readAsArrayBuffer(file.slice(0, 65536))\n    },\n    preloadImage (source, options) {\n      // ie 11 support\n      let File = window.File\n      try {\n        new File([], '') // eslint-disable-line\n      } catch (e) {\n        File = class File extends Blob {\n          constructor (chunks, filename, opts = {}) {\n            super(chunks, opts)\n            this.lastModifiedDate = new Date()\n            this.lastModified = +this.lastModifiedDate\n            this.name = filename\n          }\n        }\n      }\n      options = Object.assign({}, options)\n      if (typeof source === 'object') {\n        this.imageSelected = true\n        this.image = ''\n        if (this.supportsPreview) {\n          this.loadImage(source, true)\n        } else {\n          this.$emit('prefill')\n        }\n        return\n      }\n      let headers = new Headers()\n      headers.append('Accept', 'image/*')\n      fetch(source, {\n        method: 'GET',\n        mode: 'cors',\n        headers: headers\n      }).then(response => {\n        return response.blob()\n      })\n      .then(imageBlob => {\n        let e = { target: { files: [] } }\n        const fileName = options.fileName || source.split('/').slice(-1)[0]\n        let mediaType = options.mediaType || ('image/' + (options.fileType || fileName.split('.').slice(-1)[0]))\n        mediaType = mediaType.replace('jpg', 'jpeg')\n        e.target.files[0] = new File([imageBlob], fileName, { type: mediaType })\n        this.onFileChange(e, true)\n      })\n      .catch(err => {\n        this.$emit('error', {\n          type: 'failedPrefill',\n          message: 'Failed loading prefill image: ' + err\n        })\n      })\n    }\n  },\n  computed: {\n    supportsUpload () {\n      if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\\/(1.0|2.0|2.5|3.0))/)) {\n        return false\n      }\n      const el = document.createElement('input')\n      el.type = 'file'\n      return !el.disabled\n    },\n    supportsPreview () {\n      return window.FileReader && !!window.CanvasRenderingContext2D\n    },\n    supportsDragAndDrop () {\n      const div = document.createElement('div')\n      return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)\n    },\n    computedClasses () {\n      const classObject = {}\n      classObject['dragging-over'] = this.draggingOver\n      return classObject\n    },\n    fontSize () {\n      return Math.min(0.04 * this.previewWidth, 21) + 'px'\n    }\n  }\n}\n</script>\n\n<style scoped>\n.picture-input {\n  width: 100%;\n  margin: 0 auto;\n  text-align: center;\n}\n.preview-container {\n  width: 100%;\n  box-sizing: border-box;\n  margin: 0 auto;\n  cursor: pointer;\n  overflow: hidden;\n}\n.picture-preview {\n  width: 100%;\n  height: 100%;\n  position: relative;\n  z-index: 10001;\n  box-sizing: border-box;\n  background-color: rgba(200,200,200,.25);\n}\n.picture-preview.dragging-over {\n  filter: brightness(0.5);\n}\n.picture-inner {\n  position: relative;\n  z-index: 10002;\n  pointer-events: none;\n  box-sizing: border-box;\n  margin: 1em auto;\n  padding: 0.5em;\n  border: .3em dashed rgba(66,66,66,.15);\n  border-radius: 8px;\n  width: calc(100% - 2.5em);\n  height: calc(100% - 2.5em);\n  display: table;\n}\n.picture-inner .picture-inner-text {\n  display: table-cell;\n  vertical-align: middle;\n  text-align: center;\n  font-size: 2em;\n  line-height: 1.5;\n}\nbutton {\n  margin: 1em .25em;\n  cursor: pointer;\n}\ninput[type=file] {\n  display: none;\n}\n</style>\n"]}, media: undefined });
+
+  };
+  /* scoped */
+  const __vue_scope_id__$a = "data-v-4ae4354e";
+  /* module identifier */
+  const __vue_module_identifier__$a = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$a = false;
+  /* style inject SSR */
+  
+
+  
+  var PictureInput = normalizeComponent_1(
+    { render: __vue_render__$a, staticRenderFns: __vue_staticRenderFns__$a },
+    __vue_inject_styles__$a,
+    __vue_script__$a,
+    __vue_scope_id__$a,
+    __vue_is_functional_template__$a,
+    __vue_module_identifier__$a,
+    browser,
+    undefined
+  );
+
+var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var defaults$4 = {
+  width: 200,
+  height: 200,
+  crop: false,
+  margin: 0,
+  radius: 0,
+  plain: false,
+  accept: 'image/*',
+  size: 5,
+  removable: false,
+  hideChangeButton: true,
+  buttonClass: 'btn btn-primary',
+  removeButtonClass: 'btn btn-secondary',
+  zIndex: 1000,
+  alertOnError: true,
+  customStrings: {
+    upload: '<p>当前浏览器不支持图片上传功能.</p>',
+    drag: '拖拽图片 或者 <br>点击选择文件',
+    tap: 'Tap here to select a photo <br>from your gallery',
+    change: '更改',
+    remove: '删除',
+    select: '选择',
+    selected: '<p>选择成功</p>',
+    fileSize: '文件大小超过限制',
+    fileType: '不支持的文件类型',
+    aspect: 'Landscape/Portrait'
+  }
+};
+
+var script$b = {
+  data: function data() {
+    return {
+      initializeValue: ''
+    };
+  },
+
+  computed: {
+    config: function config() {
+      return _extend_3_0_2_extend(true, {}, defaults$4, this.definition.config);
+    }
+  },
+  created: function created() {
+    var _this = this;
+
+    this.$watch('value', function (newValue) {
+      _this.initializeValue = newValue;
+    }, {
+      immediate: true
+    });
+  },
+
+  methods: _extends$3({
+    onChange: function onChange(image) {
+      var _this2 = this;
+
+      var config = this.config;
+
+
+      if (image) {
+        if (config.action) {
+          config.action(image, config.directory).then(function (uri) {
+            if (uri) {
+              _this2.value = uri;
+            }
+          }).catch(function (err) {
+            console.error(err);
+          });
+        } else {
+          this.uploadImage(image, config.directory).then(function (uri) {
+            if (uri) {
+              _this2.value = uri;
+            }
+          }).catch(function (err) {
+            console.error(err);
+          });
+        }
+      }
+    }
+  }, mapActions(['uploadImage'])),
+  mixins: [basicMixin],
+  components: {
+    PictureInput: PictureInput
+  }
+};
+
+/* script */
+var __vue_script__$b = script$b;
+
+/* template */
+var __vue_render__$b = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", { staticClass: "image-upload" }, [_c("picture-input", {
+    ref: "upload",
+    attrs: {
+      width: _vm.config.width,
+      height: _vm.config.height,
+      margin: _vm.config.margin,
+      crop: _vm.config.crop,
+      radius: _vm.config.radius,
+      plain: _vm.config.plain,
+      accept: _vm.config.accept,
+      size: _vm.config.size,
+      removable: _vm.config.removable,
+      hideChangeButton: _vm.config.hideChangeButton,
+      buttonClass: _vm.config.buttonClass,
+      removeButtonClass: _vm.config.removeButtonClass,
+      zIndex: _vm.config.zIndex,
+      prefill: _vm.initializeValue,
+      alertOnError: _vm.config.alertOnError,
+      customStrings: _vm.config.customStrings
+    },
+    on: { change: _vm.onChange }
+  }), _vm._v(" "), _c("span", { staticClass: "value" }, [_vm._v(_vm._s(_vm.value))])], 1);
+};
+var __vue_staticRenderFns__$b = [];
+__vue_render__$b._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$b = undefined;
+/* scoped */
+var __vue_scope_id__$b = undefined;
+/* module identifier */
+var __vue_module_identifier__$b = undefined;
+/* functional template */
+var __vue_is_functional_template__$b = false;
+/* style inject */
+
+/* style inject SSR */
+
+var ImageUpload = normalizeComponent_1({ render: __vue_render__$b, staticRenderFns: __vue_staticRenderFns__$b }, __vue_inject_styles__$b, __vue_script__$b, __vue_scope_id__$b, __vue_is_functional_template__$b, __vue_module_identifier__$b, undefined, undefined);
+
+var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var DEFAULT_VALID = {
+  status: 0,
+  message: ''
+};
+
+var script$c = {
+  props: {
+    definition: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      default: -1
+    }
+  },
+  computed: _extends$4({}, mapState({
+    messages: function messages(state) {
+      return state.messages;
+    }
+  }), mapGetters(['getSchema']), {
+    valid: function valid() {
+      return _$2.get(this.messages, this.path.join('.')) || DEFAULT_VALID;
+    },
+    description: function description() {
+      return this.definition.description;
+    },
+    path: function path() {
+      // 根据实际坐标设置路径
+      var key = this.definition.key;
+
+      if (key) {
+        key = key.slice();
+
+        // 先替换父级的path,取父级路径
+        var parentPath = this.$parent.$parent.path;
+
+        if (parentPath) {
+          var len = parentPath.length;
+          var keyLen = key.length;
+
+          if (len < keyLen) {
+            key.splice(0, len);
+            key = parentPath.slice(0, len).concat(key);
+          }
+        }
+
+        var idx = this.index;
+        // TODO: 这个传递index的方式有点牵强。
+        idx = idx !== -1 ? idx : this.$parent.$parent.index;
+
+        if (idx !== -1) {
+          var i = _$2.lastIndexOf(key, '$index');
+
+          if (i > -1) {
+            key.splice(i, 1, idx);
+          }
+        }
+
+        return key;
+      } else {
+        // 没有key就继承父级的path，保证往上层找肯定能找到path
+        return this.$parent.$parent.path || [];
+      }
+    },
+    name: function name() {
+      return this.path.join('-');
+    },
+    schema: function schema() {
+      return this.getSchema(this.definition.key);
+    }
+  }),
+  components: {
+    'v-text': vText,
+    'checkbox': Checkbox,
+    'checkboxes': Checkboxes,
+    'date': vDate,
+    'hidden': Hidden,
+    'v-html': vHtml,
+    'number': vNumber,
+    'v-select': vSelect,
+    'v-textarea': vTextArea,
+    'editor': Editor$1,
+    'image-upload': ImageUpload
+  }
+};
+
+/* script */
+var __vue_script__$c = script$c;
+
+/* template */
+var __vue_render__$c = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", {
+    staticClass: "form-group",
+    class: [_vm.definition.className, _vm.name, _vm.valid.status === 1 ? "has-success" : _vm.valid.status === 2 ? "has-error" : ""]
+  }, [_vm.definition.title ? [_c("label", { staticClass: "col-sm-2 control-label" }, [_vm.definition.required ? _c("span", { staticClass: "required" }, [_vm._v("*")]) : _vm._e(), _vm._v("\n      " + _vm._s(_vm.definition.title) + ":\n    ")]), _vm._v(" "), _c("div", { staticClass: "col-sm-10" }, [_c(_vm.definition.type, {
+    tag: "component",
+    attrs: {
+      definition: _vm.definition,
+      path: _vm.path,
+      schema: _vm.schema
+    }
+  })], 1), _vm._v(" "), _c("div", { staticClass: "col-sm-offset-2 col-sm-10 form-tips" }, [_c("span", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.valid.status !== 2,
+      expression: "valid.status !== 2"
+    }]
+  }, [_vm._v(_vm._s(_vm.description))]), _vm._v(" "), _c("span", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.valid.status === 2,
+      expression: "valid.status === 2"
+    }]
+  }, [_vm._v(_vm._s(_vm.valid.message))])])] : [_c("div", { staticClass: "col-sm-12" }, [_c(_vm.definition.type, {
+    tag: "component",
+    attrs: {
+      definition: _vm.definition,
+      path: _vm.path,
+      schema: _vm.schema
+    }
+  })], 1), _vm._v(" "), _c("div", { staticClass: "col-sm-12 form-tips" }, [_c("span", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.valid.status !== 2,
+      expression: "valid.status !== 2"
+    }]
+  }, [_vm._v(_vm._s(_vm.description))]), _vm._v(" "), _c("span", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.valid.status === 2,
+      expression: "valid.status === 2"
+    }]
+  }, [_vm._v(_vm._s(_vm.valid.message))])])]], 2);
+};
+var __vue_staticRenderFns__$c = [];
+__vue_render__$c._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$c = undefined;
+/* scoped */
+var __vue_scope_id__$c = undefined;
+/* module identifier */
+var __vue_module_identifier__$c = undefined;
+/* functional template */
+var __vue_is_functional_template__$c = false;
+/* style inject */
+
+/* style inject SSR */
+
+var FormGroup = normalizeComponent_1({ render: __vue_render__$c, staticRenderFns: __vue_staticRenderFns__$c }, __vue_inject_styles__$c, __vue_script__$c, __vue_scope_id__$c, __vue_is_functional_template__$c, __vue_module_identifier__$c, undefined, undefined);
+
+Vue.component('form-group', FormGroup);
+
+var objectMixin = {
+  props: {
+    definition: {
+      type: Object,
+      required: true
+    },
+    path: {
+      type: Array,
+      required: true
+    },
+    schema: {
+      type: Object,
+      required: true
+    }
+  }
+};
+
+//
+
+var script$d = {
+  mixins: [objectMixin]
+};
+
+/* script */
+var __vue_script__$d = script$d;
+
+/* template */
+var __vue_render__$d = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", { staticClass: "fieldset" }, _vm._l(_vm.definition.items, function (group, idx) {
+    return _c("form-group", {
+      key: (group.key ? group.key.join(".") : "") + "-" + idx,
+      attrs: { definition: group }
+    });
+  }), 1);
+};
+var __vue_staticRenderFns__$d = [];
+__vue_render__$d._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$d = undefined;
+/* scoped */
+var __vue_scope_id__$d = undefined;
+/* module identifier */
+var __vue_module_identifier__$d = undefined;
+/* functional template */
+var __vue_is_functional_template__$d = false;
+/* style inject */
+
+/* style inject SSR */
+
+var Fieldset = normalizeComponent_1({ render: __vue_render__$d, staticRenderFns: __vue_staticRenderFns__$d }, __vue_inject_styles__$d, __vue_script__$d, __vue_scope_id__$d, __vue_is_functional_template__$d, __vue_module_identifier__$d, undefined, undefined);
+
+Vue.component('v-fieldset', Fieldset);
+
+var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var arrayMixins = {
+  data: function data() {
+    return {
+      len: 0
+    };
+  },
+
+  props: {
+    definition: {
+      type: Object,
+      required: true
+    },
+    path: {
+      type: Array,
+      required: true
+    },
+    schema: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: _extends$5({}, mapState({
+    model: function model(state) {
+      return state.model;
+    }
+  }), {
+    list: {
+      get: function get() {
+        return _$2.get(this.model, this.path);
+      },
+      set: function set(value) {
+        this.setValue({ path: this.path, value: value });
+      }
+    },
+    minItems: function minItems() {
+      return this.schema.minItems || 0;
+    },
+    maxItems: function maxItems() {
+      return this.schema.maxItems || 100;
+    }
+  }),
+  watch: {
+    list: function list(newValue) {
+      this.len = newValue.length;
+    }
+  },
+  created: function created() {
+    var model = _$2.get(this.model, this.path);
+
+    this.len = model ? model.length : 0;
+  },
+
+  methods: _extends$5({}, mapMutations(['removeValue', 'setValue', 'exchanceItem']), {
+    remveItem: function remveItem(idx) {
+      if (this.len > this.minItems) {
+        this.len = this.len - 1;
+
+        this.removeValue(this.path.concat(idx));
+      } else {
+        /* global alert:true */
+        /* eslint no-undef: "error" */
+        alert('小于最小个数');
+      }
+    },
+    addItem: function addItem() {
+      if (this.len < this.maxItems) {
+        this.len = this.len + 1;
+      } else {
+        /* global alert:true */
+        /* eslint no-undef: "error" */
+        alert('大于最大个数');
+      }
+    },
+    upItem: function upItem(idx) {
+      this.exchanceItem({ path: this.path, newIndex: idx - 1, oldIndex: idx });
+    },
+    downItem: function downItem(idx) {
+      this.exchanceItem({ path: this.path, newIndex: idx, oldIndex: idx + 1 });
+    }
+  }),
+  components: {
+    draggable: draggable
+  }
+};
+
+//
+
+var script$e = {
+  mixins: [arrayMixins]
+};
+
+/* script */
+var __vue_script__$e = script$e;
+
+/* template */
+var __vue_render__$e = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _vm.definition.isFixed ? _c("ul", { staticClass: "list-group" }, [_vm._l(_vm.len, function (idx) {
+    return _c("li", {
+      key: idx - 1,
+      staticClass: "list-group-item drag-item",
+      attrs: { drop: "moveItem" }
+    }, [_vm._l(_vm.definition.items, function (group) {
+      return _c("form-group", {
+        key: (group.key ? group.key.join(".") : "") + "-" + (idx - 1),
+        attrs: { definition: group, index: idx - 1 }
+      });
+    }), _vm._v(" "), !_vm.definition.isFixed ? _c("span", {
+      staticClass: "glyphicon glyphicon-remove",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.remveItem(idx - 1);
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== 1 ? _c("span", {
+      staticClass: "glyphicon glyphicon-chevron-up",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.upItem(idx - 1);
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== _vm.len ? _c("span", {
+      staticClass: "glyphicon glyphicon-chevron-down",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.downItem(idx - 1);
+        }
+      }
+    }) : _vm._e()], 2);
+  }), _vm._v(" "), _c("li", {
+    staticClass: "list-group-item text-right",
+    attrs: { slot: "footer" },
+    slot: "footer"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: { type: "button" },
+    on: { click: _vm.addItem }
+  }, [_vm._v("添加")])])], 2) : _c("draggable", {
+    staticClass: "list-group",
+    attrs: { tag: "ul", draggable: ".drag-item" },
+    model: {
+      value: _vm.list,
+      callback: function callback($$v) {
+        _vm.list = $$v;
+      },
+      expression: "list"
+    }
+  }, [_vm._l(_vm.len, function (idx) {
+    return _c("li", {
+      key: idx - 1,
+      staticClass: "list-group-item drag-item",
+      attrs: { drop: "moveItem" }
+    }, [_vm._l(_vm.definition.items, function (group) {
+      return _c("form-group", {
+        key: (group.key ? group.key.join(".") : "") + "-" + (idx - 1),
+        attrs: { definition: group, index: idx - 1 }
+      });
+    }), _vm._v(" "), !_vm.definition.isFixed ? _c("span", {
+      staticClass: "glyphicon glyphicon-remove",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.remveItem(idx - 1);
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== 1 ? _c("span", {
+      staticClass: "glyphicon glyphicon-chevron-up",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.upItem(idx - 1);
+        }
+      }
+    }) : _vm._e(), _vm._v(" "), !_vm.definition.isFixed && idx !== _vm.len ? _c("span", {
+      staticClass: "glyphicon glyphicon-chevron-down",
+      attrs: { type: "button" },
+      on: {
+        click: function click($event) {
+          return _vm.downItem(idx - 1);
+        }
+      }
+    }) : _vm._e()], 2);
+  }), _vm._v(" "), _c("li", {
+    staticClass: "list-group-item text-right",
+    attrs: { slot: "footer" },
+    slot: "footer"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: { type: "button" },
+    on: { click: _vm.addItem }
+  }, [_vm._v("添加")])])], 2);
+};
+var __vue_staticRenderFns__$e = [];
+__vue_render__$e._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$e = undefined;
+/* scoped */
+var __vue_scope_id__$e = undefined;
+/* module identifier */
+var __vue_module_identifier__$e = undefined;
+/* functional template */
+var __vue_is_functional_template__$e = false;
+/* style inject */
+
+/* style inject SSR */
+
+var Array$1 = normalizeComponent_1({ render: __vue_render__$e, staticRenderFns: __vue_staticRenderFns__$e }, __vue_inject_styles__$e, __vue_script__$e, __vue_scope_id__$e, __vue_is_functional_template__$e, __vue_module_identifier__$e, undefined, undefined);
+
+Vue.component('array', Array$1);
+
+//
+
+var script$f = {
+  mixins: [objectMixin]
+};
+
+/* script */
+var __vue_script__$f = script$f;
+
+/* template */
+var __vue_render__$f = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", { staticClass: "row" }, _vm._l(_vm.definition.items, function (group, idx) {
+    return _c("div", {
+      key: (group.key ? group.key.join(".") : "") + "-" + idx,
+      class: ["col-xs-" + group.col]
+    }, [_c("form-group", { attrs: { definition: group } })], 1);
+  }), 0);
+};
+var __vue_staticRenderFns__$f = [];
+__vue_render__$f._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$f = undefined;
+/* scoped */
+var __vue_scope_id__$f = undefined;
+/* module identifier */
+var __vue_module_identifier__$f = undefined;
+/* functional template */
+var __vue_is_functional_template__$f = false;
+/* style inject */
+
+/* style inject SSR */
+
+var Inline = normalizeComponent_1({ render: __vue_render__$f, staticRenderFns: __vue_staticRenderFns__$f }, __vue_inject_styles__$f, __vue_script__$f, __vue_scope_id__$f, __vue_is_functional_template__$f, __vue_module_identifier__$f, undefined, undefined);
+
+Vue.component('inline', Inline);
+
+//
+
+var script$g = {
+  computed: mapState({
+    definition: function definition(state) {
+      return state.definition;
+    }
+  })
+};
+
+/* script */
+var __vue_script__$g = script$g;
+
+/* template */
+var __vue_render__$g = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("form", {
+    staticClass: "form-horizontal",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+      }
+    }
+  }, _vm._l(_vm.definition, function (group, idx) {
+    return _c("form-group", {
+      key: (group.key ? group.key.join(".") : "") + "-" + idx,
+      attrs: { definition: group }
+    });
+  }), 1);
+};
+var __vue_staticRenderFns__$g = [];
+__vue_render__$g._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$g = undefined;
+/* scoped */
+var __vue_scope_id__$g = undefined;
+/* module identifier */
+var __vue_module_identifier__$g = undefined;
+/* functional template */
+var __vue_is_functional_template__$g = false;
+/* style inject */
+
+/* style inject SSR */
+
+var Horizontal = normalizeComponent_1({ render: __vue_render__$g, staticRenderFns: __vue_staticRenderFns__$g }, __vue_inject_styles__$g, __vue_script__$g, __vue_scope_id__$g, __vue_is_functional_template__$g, __vue_module_identifier__$g, undefined, undefined);
+
+var _extends$6 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var script$h = {
+  props: {
+    schema: {
+      type: Object,
+      required: true
+    },
+    definition: {
+      type: Array
+    },
+    model: [Object, Array],
+    theme: {
+      type: String,
+      default: 'bootstrap'
+    }
+  },
+  created: function created() {
+    var schema = this.schema,
+        definition = this.definition,
+        model = this.model;
+
+
+    this.init({ schema: schema, definition: definition, model: model });
+  },
+  components: {
+    'bootstrap': Horizontal
+  },
+  methods: _extends$6({}, mapMutations(['init']))
+};
+
+/* script */
+var __vue_script__$h = script$h;
+
+/* template */
+var __vue_render__$h = function __vue_render__() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c("div", { staticClass: "vue-form" }, [_c(_vm.theme, { tag: "component" }), _vm._v(" "), _vm._t("default")], 2);
+};
+var __vue_staticRenderFns__$h = [];
+__vue_render__$h._withStripped = true;
+
+/* style */
+var __vue_inject_styles__$h = undefined;
+/* scoped */
+var __vue_scope_id__$h = undefined;
+/* module identifier */
+var __vue_module_identifier__$h = undefined;
+/* functional template */
+var __vue_is_functional_template__$h = false;
+/* style inject */
+
+/* style inject SSR */
+
+var VueForm = normalizeComponent_1({ render: __vue_render__$h, staticRenderFns: __vue_staticRenderFns__$h }, __vue_inject_styles__$h, __vue_script__$h, __vue_scope_id__$h, __vue_is_functional_template__$h, __vue_module_identifier__$h, undefined, undefined);
 
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
@@ -11194,8 +11189,13 @@ function install(Vue) {
 	Vue.component('vue-form', VueForm);
 }
 
+var mixins = {
+	basicMixin: basicMixin,
+	objectMixin: objectMixin,
+	arrayMixin: arrayMixins
+};
 var VueJSONSchemaForm = VueForm;
-var store = Store;
+var store$1 = store;
 // export validator
 
 var plugin = {
@@ -11222,4 +11222,4 @@ if (GlobalVue) {
 }
 
 export default plugin;
-export { install, VueJSONSchemaForm, store };
+export { install, mixins, VueJSONSchemaForm, store$1 as store };

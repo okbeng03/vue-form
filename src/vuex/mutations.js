@@ -1,14 +1,14 @@
 import _ from 'lodash'
 import extend from 'extend'
-import Generator from '../core/schema'
 import { parseErrors } from '../util/util'
 import Ajv from '../validate'
 import localize from '../validate/localize'
 
-const generator = new Generator()
 const ARRAY_ROOT_KEY = 'silentList'
 
 export const init = (state, { schema, definition, model = {} }) => {
+  const generator = state.generator
+
   // 根节点是array，要嵌套一层
   if (schema.type === 'array') {
     let newSchema = {

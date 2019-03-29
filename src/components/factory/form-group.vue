@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group" :class="[name, valid.status === 1 ? 'has-success' : valid.status === 2 ? 'has-error' : '']">
+  <div class="form-group" :class="[definition.className, name, valid.status === 1 ? 'has-success' : valid.status === 2 ? 'has-error' : '']">
     <template v-if="definition.title">
       <label class="col-sm-2 control-label">
         <span v-if="definition.required" class="required">*</span>
