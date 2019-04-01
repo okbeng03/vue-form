@@ -8703,14 +8703,16 @@ var init = function init(state, _ref) {
 
     state.isRootArray = true;
   }
-  console.log(generator);
+
   state.definition = generator.parse(schema, definition);
   state.schema = schema;
   state.validator = null;
-
+  console.log(1);
   var data = generator.getDefaultModal(schema);
+  console.log(2, data);
   state.model = _extend_3_0_2_extend(true, {}, data, model);
   state.ajv = new Ajv$1();
+  console.log(3);
   state.messages = {};
   state.valid = true;
 };
@@ -8740,6 +8742,7 @@ var setMessages = function setMessages(state, messages) {
 // 校验整个表单
 var validate$2 = function validate(state, path) {
   // 延迟compile，保证自定义format、keyword添加
+  console.log(state.schema);
   if (!state.validator) {
     state.validator = state.ajv.compile(state.schema);
   }
@@ -9072,17 +9075,19 @@ function arrayRule (def, schema, options) {
 
   if (type === 'array') {
     def.type = 'array';
-    def.items = [];
 
     var path = options.path.slice();
 
     // 用$index来代替[]，$index作为数组坐标，可替换真实坐标
     path.push('$index');
-    this._parse('', schema.items, def.items, {
-      path: path,
-      lookup: options.lookup,
-      parentType: 'array'
-    });
+    if (schema.items) {
+      def.items = [];
+      this._parse('', schema.items, def.items, {
+        path: path,
+        lookup: options.lookup,
+        parentType: 'array'
+      });
+    }
   }
 }
 
@@ -9355,7 +9360,9 @@ function defaultValue(schema, key, model) {
     });
   } else if (type === 'array') {
     model[key] = [];
-    defaultValue(schema.items, 0, model[key]);
+    if (schema.items) {
+      defaultValue(schema.items, 0, model[key]);
+    }
   } else {
     if (schema.default) {
       model[key] = schema.default;

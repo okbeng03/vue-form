@@ -46,7 +46,6 @@ export const init = (state, { schema, definition, model = {} }) => {
   state.definition = generator.parse(schema, definition)
   state.schema = schema
   state.validator = null
-  
   const data = generator.getDefaultModal(schema)
   state.model = extend(true, {}, data, model)
   state.ajv = new Ajv()

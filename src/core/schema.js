@@ -146,7 +146,9 @@ function defaultValue (schema, key, model) {
     })
   } else if (type === 'array') {
     model[key] = []
-    defaultValue(schema.items, 0, model[key])
+    if (schema.items) {
+      defaultValue(schema.items, 0, model[key])
+    }
   } else {
     if (schema.default) {
       model[key] = schema.default
