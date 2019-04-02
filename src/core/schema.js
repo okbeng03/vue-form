@@ -73,7 +73,7 @@ class Generator {
    * @param {Array} definition 
    */
   parse (schema, definition = []) {
-    if (!schema && schema.properties) {
+    if (!(schema && schema.properties)) {
       throw new Error('schema no validate!')
     }
 

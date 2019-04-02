@@ -8681,7 +8681,7 @@ var init = function init(state, _ref) {
 
     newSchema.properties[ARRAY_ROOT_KEY] = Object.assign({}, schema);
     schema = newSchema;
-
+    console.log(11111, _$2.isEmpty(model), JSON.stringify(model));
     if (!_$2.isEmpty(model)) {
       var newModel = {};
 
@@ -8707,12 +8707,10 @@ var init = function init(state, _ref) {
   state.definition = generator.parse(schema, definition);
   state.schema = schema;
   state.validator = null;
-  console.log(1);
   var data = generator.getDefaultModal(schema);
-  console.log(2, data);
+  console.log(data, model);
   state.model = _extend_3_0_2_extend(true, {}, data, model);
   state.ajv = new Ajv$1();
-  console.log(3);
   state.messages = {};
   state.valid = true;
 };
@@ -8742,7 +8740,6 @@ var setMessages = function setMessages(state, messages) {
 // 校验整个表单
 var validate$2 = function validate(state, path) {
   // 延迟compile，保证自定义format、keyword添加
-  console.log(state.schema);
   if (!state.validator) {
     state.validator = state.ajv.compile(state.schema);
   }
@@ -9280,7 +9277,7 @@ var Generator = function () {
 
       var definition = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
-      if (!schema && schema.properties) {
+      if (!(schema && schema.properties)) {
         throw new Error('schema no validate!');
       }
 

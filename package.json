@@ -1,6 +1,6 @@
 {
   "name": "jsonschema-form-vue",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A simple Vue component capable of building HTML forms out of a JSON schema",
   "module": "dist/vue-jsonschema-form.esm.js",
   "scripts": {
