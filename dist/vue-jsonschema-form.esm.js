@@ -8681,7 +8681,7 @@ var init = function init(state, _ref) {
 
     newSchema.properties[ARRAY_ROOT_KEY] = Object.assign({}, schema);
     schema = newSchema;
-    console.log(11111, _$2.isEmpty(model), JSON.stringify(model));
+
     if (!_$2.isEmpty(model)) {
       var newModel = {};
 
@@ -8708,7 +8708,6 @@ var init = function init(state, _ref) {
   state.schema = schema;
   state.validator = null;
   var data = generator.getDefaultModal(schema);
-  console.log(data, model);
   state.model = _extend_3_0_2_extend(true, {}, data, model);
   state.ajv = new Ajv$1();
   state.messages = {};
