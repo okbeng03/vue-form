@@ -1,7 +1,8 @@
 <template>
   <div class="vue-form">
-    <component :is="theme"></component>
-    <slot></slot>
+    <component :is="theme">
+      <slot></slot>
+    </component>
   </div>
 </template>
 

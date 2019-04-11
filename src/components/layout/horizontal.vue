@@ -1,6 +1,7 @@
 <template>
   <form class="form-horizontal" @submit.prevent>
     <form-group v-for="(group, idx) in definition" :definition="group" :key="`${group.key ? group.key.join('.') : ''}-${idx}`"></form-group>
+    <slot></slot>
   </form>
 </template>
 

@@ -9378,9 +9378,6 @@ function combine(form, schemaForm, lookup) {
   // Important: 存在*就意味着使用schema生成的默认定义，只是在前后做一定的扩展，如果此时存在同名定义，就会存在两个定义。
   if (idx > -1) {
     form.splice(idx, 1);
-    //   form = form.slice(0, idx).concat(schemaForm).concat(form.slice(idx + 1))
-
-    //   return form
   }
 
   var definition = [];
@@ -11070,12 +11067,12 @@ var __vue_render__$g = function __vue_render__() {
         $event.preventDefault();
       }
     }
-  }, _vm._l(_vm.definition, function (group, idx) {
+  }, [_vm._l(_vm.definition, function (group, idx) {
     return _c("form-group", {
       key: (group.key ? group.key.join(".") : "") + "-" + idx,
       attrs: { definition: group }
     });
-  }), 1);
+  }), _vm._v(" "), _vm._t("default")], 2);
 };
 var __vue_staticRenderFns__$g = [];
 __vue_render__$g._withStripped = true;
@@ -11133,7 +11130,7 @@ var __vue_render__$h = function __vue_render__() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
-  return _c("div", { staticClass: "vue-form" }, [_c(_vm.theme, { tag: "component" }), _vm._v(" "), _vm._t("default")], 2);
+  return _c("div", { staticClass: "vue-form" }, [_c(_vm.theme, { tag: "component" }, [_vm._t("default")], 2)], 1);
 };
 var __vue_staticRenderFns__$h = [];
 __vue_render__$h._withStripped = true;
