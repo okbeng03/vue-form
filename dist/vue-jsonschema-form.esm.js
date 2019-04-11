@@ -9170,7 +9170,7 @@ function fieldsetRule (def, schema, options) {
 function numberRule (def, schema) {
   var type = schema.type;
 
-  if (type === 'number') {
+  if (type === 'number' || type === 'integer') {
     def.type = 'number';
   }
 }
@@ -9376,10 +9376,11 @@ function combine(form, schemaForm, lookup) {
   }
 
   // Important: 存在*就意味着使用schema生成的默认定义，只是在前后做一定的扩展，如果此时存在同名定义，就会存在两个定义。
-  if (idx !== -1) {
-    form = form.slice(0, idx).concat(schemaForm).concat(form.slice(idx + 1));
+  if (idx > -1) {
+    form.splice(idx, 1);
+    //   form = form.slice(0, idx).concat(schemaForm).concat(form.slice(idx + 1))
 
-    return form;
+    //   return form
   }
 
   var definition = [];
@@ -9413,6 +9414,7 @@ function combine(form, schemaForm, lookup) {
           }
         });
       }
+      delete lookup[path];
     }
 
     // 保留html,添加v-前缀
@@ -9430,6 +9432,16 @@ function combine(form, schemaForm, lookup) {
 
     definition.push(obj);
   });
+
+  if (idx > -1 && !_$2.isEmpty(lookup)) {
+    var defaultDefinitions = [];
+
+    for (var path in lookup) {
+      defaultDefinitions.push(lookup[path]);
+    }
+
+    definition.splice.apply(definition, [idx, 0].concat(defaultDefinitions));
+  }
 
   return definition;
 }
