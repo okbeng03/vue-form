@@ -8856,28 +8856,30 @@ var setOptions = function setOptions(state, _ref4) {
 
   var definition = _$2.cloneDeep(state.definition);
   var def = getDefinitionByPath(definition, key);
-  def.options = options;
 
-  state.definition = definition;
+  if (def) {
+    def.options = options;
+    state.definition = definition;
+  }
 };
 
 function getDefinitionByPath(definition, path) {
   var def = void 0;
-  path = path.replace(/(\[\s?\])/g, '$index');
+  path = path.replace(/(\[\s?\])/g, '.$index');
 
   for (var i = 0, len = definition.length; i < len; i++) {
     def = definition[i];
-
-    if (!def.key) {
-      continue;
-    }
-
-    if (def.key.join('.') === path) {
+    console.log(def.key, def.items, def, path);
+    if (def.key && def.key.join('.') === path) {
       return def;
     }
 
     if (def.items) {
-      return getDefinitionByPath(def.items, path);
+      def = getDefinitionByPath(def.items, path);
+
+      if (def) {
+        return def;
+      }
     }
   }
 }

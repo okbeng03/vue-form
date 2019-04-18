@@ -185,28 +185,30 @@ export const exchanceItem = (state, { path, newIndex, oldIndex }) => {
 export const setOptions = (state, { key, options }) => {
   const definition = _.cloneDeep(state.definition)
   const def = getDefinitionByPath(definition, key)
-  def.options = options
-
-  state.definition = definition
+  
+  if (def) {
+    def.options = options
+    state.definition = definition
+  }
 }
 
 function getDefinitionByPath (definition, path) {
   let def
-  path = path.replace(/(\[\s?\])/g, '$index')
+  path = path.replace(/(\[\s?\])/g, '.$index')
 
   for (let i = 0, len = definition.length; i < len; i++) {
     def = definition[i]
 
-    if (!def.key) {
-      continue
-    }
-
-    if (def.key.join('.') === path) {
+    if (def.key && def.key.join('.') === path) {
       return def
     }
     
     if (def.items) {
-      return getDefinitionByPath(def.items, path)
+      def = getDefinitionByPath(def.items, path)
+
+      if (def) {
+        return def
+      }
     }
   }
 }
