@@ -284,7 +284,26 @@ var Checkbox = normalizeComponent_1({ render: __vue_render__$1, staticRenderFns:
 //
 
 var script$2 = {
-  mixins: [basicMixin]
+  mixins: [basicMixin],
+  computed: {
+    value: {
+      get: function get() {
+        return _$2.get(this.model, this.path) || [];
+      },
+      set: function set(val) {
+        console.log(val);
+        // if (typeof val === 'string') {
+        //   val = 
+        // }
+        // 无值
+        if (val === '') {
+          this.removeValue(this.path);
+        } else {
+          this.setValue({ path: this.path, value: val });
+        }
+      }
+    }
+  }
 };
 
 /* script */
@@ -306,22 +325,22 @@ var __vue_render__$2 = function __vue_render__() {
       staticClass: "vue-form-input",
       attrs: {
         type: "checkbox",
+        "true-value": item.value,
         disabled: _vm.definition.disabled,
-        name: _vm.path,
+        name: _vm.name,
         readonly: _vm.definition.readonly,
         lazy: _vm.definition.lazy === false ? false : true
       },
       domProps: {
-        value: item.value,
-        checked: Array.isArray(_vm.value) ? _vm._i(_vm.value, item.value) > -1 : _vm.value
+        checked: Array.isArray(_vm.value) ? _vm._i(_vm.value, null) > -1 : _vm._q(_vm.value, item.value)
       },
       on: {
         change: function change($event) {
           var $$a = _vm.value,
               $$el = $event.target,
-              $$c = $$el.checked ? true : false;
+              $$c = $$el.checked ? item.value : false;
           if (Array.isArray($$a)) {
-            var $$v = item.value,
+            var $$v = null,
                 $$i = _vm._i($$a, $$v);
             if ($$el.checked) {
               $$i < 0 && (_vm.value = $$a.concat([$$v]));
@@ -8869,7 +8888,7 @@ function getDefinitionByPath(definition, path) {
 
   for (var i = 0, len = definition.length; i < len; i++) {
     def = definition[i];
-    console.log(def.key, def.items, def, path);
+
     if (def.key && def.key.join('.') === path) {
       return def;
     }
