@@ -291,10 +291,6 @@ var script$2 = {
         return _$2.get(this.model, this.path) || [];
       },
       set: function set(val) {
-        console.log(val);
-        // if (typeof val === 'string') {
-        //   val = 
-        // }
         // 无值
         if (val === '') {
           this.removeValue(this.path);
@@ -332,7 +328,8 @@ var __vue_render__$2 = function __vue_render__() {
         lazy: _vm.definition.lazy === false ? false : true
       },
       domProps: {
-        checked: Array.isArray(_vm.value) ? _vm._i(_vm.value, null) > -1 : _vm._q(_vm.value, item.value)
+        value: item.value,
+        checked: Array.isArray(_vm.value) ? _vm._i(_vm.value, item.value) > -1 : _vm._q(_vm.value, item.value)
       },
       on: {
         change: function change($event) {
@@ -340,7 +337,7 @@ var __vue_render__$2 = function __vue_render__() {
               $$el = $event.target,
               $$c = $$el.checked ? item.value : false;
           if (Array.isArray($$a)) {
-            var $$v = null,
+            var $$v = item.value,
                 $$i = _vm._i($$a, $$v);
             if ($$el.checked) {
               $$i < 0 && (_vm.value = $$a.concat([$$v]));

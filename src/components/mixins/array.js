@@ -29,7 +29,7 @@ export default {
     }),
     list: {
       get () {
-        return _.get(this.model, this.path)
+        return _.get(this.model, this.path) || []
       },
       set (value) {
         this.setValue({ path: this.path, value: value})

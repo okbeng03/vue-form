@@ -144,8 +144,7 @@ export const setValue = (state, { path, value }) => {
 
 export const setModel = (state, model) => {
   state.model = _.cloneDeep(model)
-
-  validate(state)
+  // validate(state)
 }
 
 // 删除指定属性，表单元素值为空或数组删除时触发
